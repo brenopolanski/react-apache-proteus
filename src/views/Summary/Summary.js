@@ -14,10 +14,14 @@
  */
 
 // Packages
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
 
-// Main
-import App from './App';
+class Summary extends Component {
+  render() {
+    return (
+      <div>Working...</div>
+    );
+  }
+}
 
-ReactDOM.render(<App />, document.getElementById('drat-app'));
+export default Summary;

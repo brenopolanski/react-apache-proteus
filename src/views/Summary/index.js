@@ -13,11 +13,4 @@
  *   the License.
  */
 
-// Packages
-import React from 'react';
-import ReactDOM from 'react-dom';
-
-// Main
-import App from './App';
-
-ReactDOM.render(<App />, document.getElementById('drat-app'));
+export { default } from './Summary';

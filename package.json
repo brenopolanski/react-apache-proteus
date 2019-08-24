@@ -1,18 +1,47 @@
 {
-  "name": "react-proteus",
+  "name": "react-apache-drat",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "antd": "^3.22.0",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-scripts": "3.1.1"
-  },
+  "description": "Proteus a GUI for DRAT",
+  "license": "Apache-2.0",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "scripts": {
+    "start-js": "react-scripts start",
+    "start": "npm-run-all -p watch-css start-js",
+    "build-js": "react-scripts build",
+    "build": "npm-run-all build-css build-js",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,json,scss}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "antd": "^3.22.0",
+    "axios": "^0.18.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.7.0",
+    "react-fast-compare": "^2.0.4",
+    "react-router-dom": "^4.2.2",
+    "susy": "^2.2.12"
+  },
+  "devDependencies": {
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.0",
+    "node-sass-chokidar": "^1.3.0",
+    "npm-run-all": "^4.1.3",
+    "prettier": "^1.15.3",
+    "react-scripts": "2.1.1"
   },
   "eslintConfig": {
     "extends": "react-app"

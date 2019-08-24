@@ -13,11 +13,13 @@
  *   the License.
  */
 
-// Packages
-import React from 'react';
-import ReactDOM from 'react-dom';
+// Views
+import { Summary } from './views';
 
-// Main
-import App from './App';
-
-ReactDOM.render(<App />, document.getElementById('drat-app'));
+export const routes = [
+  {
+    path: '/',
+    exact: true,
+    component: Summary
+  }
+];

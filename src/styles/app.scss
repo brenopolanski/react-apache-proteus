@@ -13,11 +13,9 @@
  *   the License.
  */
 
-// Packages
-import React from 'react';
-import ReactDOM from 'react-dom';
-
-// Main
-import App from './App';
-
-ReactDOM.render(<App />, document.getElementById('drat-app'));
+@import 'susy/sass/susy';
+@import './vendors/normalize';
+@import './helpers/variables';
+@import './helpers/spacing-helpers';
+@import './base';
+@import './components/splash-screen';
