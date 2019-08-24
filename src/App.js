@@ -14,7 +14,7 @@
  */
 
 // Packages
-import React from 'react';
+import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // Routes
@@ -24,21 +24,48 @@ import { routes } from './routes';
 import 'antd/dist/antd.css';
 import './styles/app.css';
 
-const App = () => {
-  return (
-    <Router>
-      <Switch>
-        {routes.map((route, index) => (
-          <Route
-            key={index}
-            path={route.path}
-            component={route.component}
-            exact={route.exact}
-          />
-        ))}
-      </Switch>
-    </Router>
-  );
-};
+class App extends Component {
+  constructor() {
+    super();
+
+    this.$el = document.getElementById('drat-progress-indicator');
+
+    this.showSplashScreen();
+  }
+
+  componentDidMount() {
+    this.hideSplashScreen();
+  }
+
+  showSplashScreen() {
+    this.$el.removeAttribute('hidden');
+  }
+
+  hideSplashScreen() {
+    if (this.$el) {
+      setTimeout(() => {
+        this.$el.setAttribute('hidden', 'hidden');
+        this.$el.classList.remove('drat-available');
+      }, 3000);
+    }
+  }
+
+  render() {
+    return (
+      <Router>
+        <Switch>
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              component={route.component}
+              exact={route.exact}
+            />
+          ))}
+        </Switch>
+      </Router>
+    );
+  }
+}
 
 export default App;
