@@ -14,9 +14,6 @@
     <!-- Windows  -->
     <meta name="msapplication-TileColor" content="#ffffff" />
 
-    <!--[if lt IE 9]><script type="text/javascript" src="%PUBLIC_URL%/js/libs/svgweb/svg.js" data-path="%PUBLIC_URL%/js/libs/svgweb/"></script><![endif]-->
-    <meta name="svg.render.forceflash" content="true" />
-
     <!-- Main Link Tags  -->
     <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16x16.png" />
@@ -50,18 +47,13 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
     <!-- Splash Screen -->
-    <div id="drat-progress-indicator" class="drat-progress-indicator" hidden>
-      <div class="drat-progress-indicator-head">
-        <div class="drat-first-indicator"></div>
-        <div class="drat-second-indicator"></div>
+    <div id="drat-app-loading" class="drat-app-loading" hidden>
+      <div class="drat-logo">
+        <img src="%PUBLIC_URL%/logo.png" alt="Apache DRAT logo" />
       </div>
-      <div class="drat-logo-frame">
-        <img
-          src="%PUBLIC_URL%/logo.png"
-          class="drat-logo-frame-img"
-          alt="Apache DRAT logo"
-        />
-      </div>
+      <svg class="drat-loading-spinner" viewbox="25 25 50 50">
+        <circle class="drat-loading-path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+      </svg>
     </div>
 
     <!-- Main -->

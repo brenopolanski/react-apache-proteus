@@ -731,88 +731,54 @@ body {
   line-height: 1.15;
   -webkit-font-smoothing: antialiased; }
 
-.drat-progress-indicator {
+.drat-app-loading {
   position: fixed;
   z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
   opacity: 1;
-  background-color: #334353;
+  background-color: #000e1c;
   transition: opacity cubic-bezier(0.4, 0, 0.2, 1) 436ms;
   pointer-events: none; }
-  .drat-progress-indicator.drat-available {
+  .drat-app-loading.drat-loading-available {
     opacity: 0; }
+  .drat-app-loading .drat-logo img {
+    width: 170px; }
+  .drat-app-loading .drat-loading-spinner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 250px;
+    height: 250px;
+    margin: auto;
+    transform-origin: center center;
+    animation: rotate 2s linear infinite; }
+    .drat-app-loading .drat-loading-spinner .drat-loading-path {
+      animation: dash 1.5s ease-in-out infinite;
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+      stroke-linecap: round;
+      stroke: #334353; }
 
-.drat-logo-frame {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 98%;
-  animation: fadein 436ms; }
-
-.drat-logo-frame-img {
-  width: 200px;
-  align-self: center; }
-
-.drat-progress-indicator-head {
-  position: relative;
-  overflow: hidden;
-  height: 4px;
-  background-color: #ccc; }
-
-.drat-progress-indicator .drat-first-indicator,
-.drat-progress-indicator .drat-second-indicator {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: #001529;
-  transform: scaleX(0);
-  transform-origin: left center; }
-
-.drat-progress-indicator .drat-first-indicator {
-  animation: first-indicator 2000ms linear infinite; }
-
-.drat-progress-indicator .drat-second-indicator {
-  animation: second-indicator 2000ms linear infinite; }
-
-.drat-progress-indicator .drat-logo {
-  animation: App-logo-spin infinite 20s linear;
-  align-self: center; }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg); }
-  to {
+@keyframes rotate {
+  100% {
     transform: rotate(360deg); } }
 
-@keyframes fadein {
-  from {
-    opacity: 0; }
-  to {
-    opacity: 1; } }
-
-@keyframes first-indicator {
+@keyframes dash {
   0% {
-    transform: translate(0%) scaleX(0); }
-  25% {
-    transform: translate(0%) scaleX(0.5); }
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0; }
   50% {
-    transform: translate(25%) scaleX(0.75); }
-  75% {
-    transform: translate(100%) scaleX(0); }
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px; }
   100% {
-    transform: translate(100%) scaleX(0); } }
-
-@keyframes second-indicator {
-  0% {
-    transform: translate(0%) scaleX(0); }
-  60% {
-    transform: translate(0%) scaleX(0); }
-  80% {
-    transform: translate(0%) scaleX(0.6); }
-  100% {
-    transform: translate(100%) scaleX(0.1); } }
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px; } }

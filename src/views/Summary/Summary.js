@@ -18,9 +18,7 @@ import React, { Component } from 'react';
 
 class Summary extends Component {
   render() {
-    return (
-      <div>Working...</div>
-    );
+    return <div>Working...</div>;
   }
 }
 
