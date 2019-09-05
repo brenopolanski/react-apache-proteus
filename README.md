@@ -1,2 +1,1 @@
-# react-proteus
-Proteus a GUI for DRAT
+# Proteus a GUI for DRAT

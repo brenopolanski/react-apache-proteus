@@ -14,19 +14,24 @@
  */
 
 // Packages
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Layout } from 'antd';
 
-// Layout
-import Container from '../../components/Layout/Container';
+// Elements
+import Sidebar from '../../Elements/Sidebar';
 
-class Summary extends Component {
-  render() {
-    return (
-      <Container>
-        <p>Loading...</p>
-      </Container>
-    );
-  }
-}
+const Container = props => {
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sidebar />
+      <div>{props.children}</div>
+    </Layout>
+  );
+};
 
-export default Summary;
+Container.propTypes = {
+  children: PropTypes.node.isRequired
+};
+
+export default Container;
