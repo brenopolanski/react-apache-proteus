@@ -17,9 +17,12 @@
 import React, { PureComponent } from 'react';
 import { Icon, Layout, Menu } from 'antd';
 
+// UI
+import { Logo } from '../../UI';
+
 // Components
 const { Sider } = Layout;
-const { SubMenu } = Menu;
+const { Item } = Menu;
 
 class Sidebar extends PureComponent {
   state = {
@@ -31,51 +34,24 @@ class Sidebar extends PureComponent {
   };
 
   render() {
+    const { collapsed } = this.state;
+
     return (
-      <Sider
-        collapsed={this.state.collapsed}
-        onCollapse={this.onCollapse}
-        collapsible
-      >
-        <div className="logo" />
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-          <Menu.Item key="1">
-            <Icon type="pie-chart" />
-            <span>Option 1</span>
-          </Menu.Item>
-          <Menu.Item key="2">
-            <Icon type="desktop" />
-            <span>Option 2</span>
-          </Menu.Item>
-          <SubMenu
-            key="sub1"
-            title={
-              <span>
-                <Icon type="user" />
-                <span>User</span>
-              </span>
-            }
-          >
-            <Menu.Item key="3">Tom</Menu.Item>
-            <Menu.Item key="4">Bill</Menu.Item>
-            <Menu.Item key="5">Alex</Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub2"
-            title={
-              <span>
-                <Icon type="team" />
-                <span>Team</span>
-              </span>
-            }
-          >
-            <Menu.Item key="6">Team 1</Menu.Item>
-            <Menu.Item key="8">Team 2</Menu.Item>
-          </SubMenu>
-          <Menu.Item key="9">
-            <Icon type="file" />
-            <span>File</span>
-          </Menu.Item>
+      <Sider collapsed={collapsed} onCollapse={this.onCollapse} collapsible>
+        {collapsed ? (
+          <Logo width={50} height={50} center />
+        ) : (
+          <Logo width={130} height={50} full center />
+        )}
+        <Menu theme="dark" defaultSelectedKeys={['summaryMenu']} mode="inline">
+          <Item key="summaryMenu">
+            <Icon type="appstore" />
+            <span>Summary</span>
+          </Item>
+          <Item key="auditMenu">
+            <Icon type="bar-chart" rotate={90} />
+            <span>Audit</span>
+          </Item>
         </Menu>
       </Sider>
     );
