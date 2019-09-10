@@ -18,7 +18,7 @@ const proxy = require('http-proxy-middleware');
 const target = 'http://drat-vm.apache.org:8080';
 const changeOrigin = true;
 
-module.exports = function(app) {
+module.exports = app => {
   app.use('/proteus', proxy({ target, changeOrigin }));
   app.use('/solr', proxy({ target, changeOrigin }));
 };
