@@ -13,37 +13,4 @@
  *   the License.
  */
 
-// Packages
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Layout } from 'antd';
-
-// Elements
-import Sidebar from '../../Elements/Sidebar';
-import RepositoryHeader from '../../Elements/RepositoryHeader';
-
-// UI
-import { Logo } from '../../UI';
-
-// Components
-const { Footer } = Layout;
-
-const Container = props => {
-  return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sidebar />
-      <Layout>
-        <RepositoryHeader />
-        <Footer style={{ textAlign: 'center' }}>
-          <Logo width={25} height={25} /> Apache DRAT
-        </Footer>
-      </Layout>
-    </Layout>
-  );
-};
-
-Container.propTypes = {
-  children: PropTypes.node.isRequired
-};
-
-export default Container;
+export { default } from './RepositoryHeader';

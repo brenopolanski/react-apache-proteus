@@ -14,36 +14,28 @@
  */
 
 // Packages
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Layout } from 'antd';
+import React, { Component } from 'react';
+import { Input, Layout } from 'antd';
 
-// Elements
-import Sidebar from '../../Elements/Sidebar';
-import RepositoryHeader from '../../Elements/RepositoryHeader';
-
-// UI
-import { Logo } from '../../UI';
+// Styles
+import './RepositoryHeader.css';
 
 // Components
-const { Footer } = Layout;
+const { Header } = Layout;
+const { Search } = Input;
 
-const Container = props => {
-  return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sidebar />
-      <Layout>
-        <RepositoryHeader />
-        <Footer style={{ textAlign: 'center' }}>
-          <Logo width={25} height={25} /> Apache DRAT
-        </Footer>
-      </Layout>
-    </Layout>
-  );
-};
+class RepositoryHeader extends Component {
+  render() {
+    return (
+      <Header className="proteus-repository-header">
+        <Search
+          placeholder="Repository to add to DRAT"
+          enterButton="RUN"
+          size="large"
+        />
+      </Header>
+    );
+  }
+}
 
-Container.propTypes = {
-  children: PropTypes.node.isRequired
-};
-
-export default Container;
+export default RepositoryHeader;

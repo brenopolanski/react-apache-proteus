@@ -14,36 +14,11 @@
  */
 
 // Packages
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Layout } from 'antd';
+const proxy = require('http-proxy-middleware');
+const target = 'http://drat-vm.apache.org:8080';
+const changeOrigin = true;
 
-// Elements
-import Sidebar from '../../Elements/Sidebar';
-import RepositoryHeader from '../../Elements/RepositoryHeader';
-
-// UI
-import { Logo } from '../../UI';
-
-// Components
-const { Footer } = Layout;
-
-const Container = props => {
-  return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sidebar />
-      <Layout>
-        <RepositoryHeader />
-        <Footer style={{ textAlign: 'center' }}>
-          <Logo width={25} height={25} /> Apache DRAT
-        </Footer>
-      </Layout>
-    </Layout>
-  );
+module.exports = function(app) {
+  app.use('/proteus', proxy({ target, changeOrigin }));
+  app.use('/solr', proxy({ target, changeOrigin }));
 };
-
-Container.propTypes = {
-  children: PropTypes.node.isRequired
-};
-
-export default Container;
