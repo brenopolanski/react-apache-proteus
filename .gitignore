@@ -1,3 +1,5 @@
+build/
+src/**/*.css
 package-lock.json
 
 # Created by https://www.gitignore.io/api/vim,git,node,linux,macos,windows,webstorm,jetbrains,sublimetext,visualstudiocode

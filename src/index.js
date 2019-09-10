@@ -20,4 +20,4 @@ import ReactDOM from 'react-dom';
 // Main
 import App from './App';
 
-ReactDOM.render(<App />, document.getElementById('drat-app'));
+ReactDOM.render(<App />, document.getElementById('proteus-app'));

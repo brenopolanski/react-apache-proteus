@@ -731,7 +731,7 @@ body {
   line-height: 1.15;
   -webkit-font-smoothing: antialiased; }
 
-.drat-app-loading {
+.proteus-app-loading {
   position: fixed;
   z-index: 9999;
   display: flex;
@@ -746,11 +746,11 @@ body {
   background-color: #000e1c;
   transition: opacity cubic-bezier(0.4, 0, 0.2, 1) 436ms;
   pointer-events: none; }
-  .drat-app-loading.drat-loading-available {
+  .proteus-app-loading.proteus-loading-available {
     opacity: 0; }
-  .drat-app-loading .drat-logo img {
+  .proteus-app-loading .proteus-logo img {
     width: 170px; }
-  .drat-app-loading .drat-loading-spinner {
+  .proteus-app-loading .proteus-loading-spinner {
     position: absolute;
     top: 0;
     right: 0;
@@ -761,7 +761,7 @@ body {
     margin: auto;
     transform-origin: center center;
     animation: rotate 2s linear infinite; }
-    .drat-app-loading .drat-loading-spinner .drat-loading-path {
+    .proteus-app-loading .proteus-loading-spinner .proteus-loading-path {
       animation: dash 1.5s ease-in-out infinite;
       stroke-dasharray: 1, 200;
       stroke-dashoffset: 0;

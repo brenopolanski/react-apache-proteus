@@ -28,7 +28,7 @@ class App extends Component {
   constructor() {
     super();
 
-    this.$el = document.getElementById('drat-app-loading');
+    this.$el = document.getElementById('proteus-app-loading');
 
     this.showSplashScreen();
   }
@@ -45,7 +45,7 @@ class App extends Component {
     if (this.$el) {
       setTimeout(() => {
         this.$el.setAttribute('hidden', 'hidden');
-        this.$el.classList.remove('drat-loading-available');
+        this.$el.classList.remove('proteus-loading-available');
       }, 3000);
     }
   }
