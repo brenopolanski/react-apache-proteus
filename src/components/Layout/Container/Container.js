@@ -21,11 +21,21 @@ import { Layout } from 'antd';
 // Elements
 import Sidebar from '../../Elements/Sidebar';
 
+// UI
+import { Logo } from '../../UI';
+
+// Components
+const { Footer } = Layout;
+
 const Container = props => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sidebar />
-      <div>{props.children}</div>
+      <Layout>
+        <Footer style={{ textAlign: 'center' }}>
+          <Logo width={25} height={25} /> Apache DRAT
+        </Footer>
+      </Layout>
     </Layout>
   );
 };
