@@ -13,14 +13,4 @@
  *   the License.
  */
 
-// Packages
-import React from 'react';
-import ReactDOM from 'react-dom';
-
-// Main
-import App from './App';
-
-// If you want to disable the logs in development, you just need to update a flag:
-window['__react-app-disable-dev-logs'] = false;
-
-ReactDOM.render(<App />, document.getElementById('proteus-app'));
+export { default } from './ProjectsTable';

@@ -16,6 +16,9 @@
 // Packages
 import axios from 'axios';
 
+// Utils
+import Helpers from '../utils/Helpers';
+
 // Constants
 const REST_URL = '/solr/statistics/select';
 
@@ -35,15 +38,20 @@ class LicenseService {
         })
       });
     } catch (error) {
-      console.log(error);
+      Helpers.axiosHandleErrors(
+        'services → LicenseService.js → loadData()',
+        error
+      );
+
+      return error.response;
     }
 
     return response;
   }
 
-  static async loadLicenseData() {}
+  // static async loadLicenseData() {}
 
-  static async loadFileDetails() {}
+  // static async loadFileDetails() {}
 
   static cancelRequest() {
     // Cancel the axios request

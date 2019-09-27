@@ -14,13 +14,29 @@
  */
 
 // Packages
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
 
-// Main
-import App from './App';
+// Services
+import { LicenseService } from '../../../services';
 
-// If you want to disable the logs in development, you just need to update a flag:
-window['__react-app-disable-dev-logs'] = false;
+class ProjectsTable extends Component {
+  componentDidMount() {
+    this.callApiLoadData();
+  }
 
-ReactDOM.render(<App />, document.getElementById('proteus-app'));
+  callApiLoadData = () => {
+    LicenseService.loadData()
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  render() {
+    return <div>Projects Table</div>;
+  }
+}
+
+export default ProjectsTable;
