@@ -25,6 +25,12 @@ const REST_URL = '/solr/statistics/select';
 // Axios Cancellation
 const CancelToken = axios.CancelToken;
 let axiosCancelRequest;
+const cancelToken = {
+  cancelToken: new CancelToken(function executor(c) {
+    // An executor function receives a cancel function as a parameter
+    axiosCancelRequest = c;
+  })
+};
 
 class LicenseService {
   static async loadData() {
@@ -32,11 +38,18 @@ class LicenseService {
 
     try {
       response = await axios.get(`${REST_URL}?q=type:project&wt=json`, {
-        cancelToken: new CancelToken(function executor(c) {
-          // An executor function receives a cancel function as a parameter
-          axiosCancelRequest = c;
-        })
+        ...cancelToken
       });
+
+      const { data } = response;
+      const { numFound } = data.response;
+
+      if (numFound !== null && numFound > 10) {
+        response = await axios.get(
+          `${REST_URL}?q=type:project&rows=${numFound}&wt=json`,
+          { ...cancelToken }
+        );
+      }
     } catch (error) {
       Helpers.axiosHandleErrors(
         'services → LicenseService.js → loadData()',

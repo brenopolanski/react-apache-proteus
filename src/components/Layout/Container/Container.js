@@ -19,14 +19,13 @@ import PropTypes from 'prop-types';
 import { Layout } from 'antd';
 
 // Elements
-import Sidebar from '../../Elements/Sidebar';
-import RepositoryHeader from '../../Elements/RepositoryHeader';
+import { RepositoryHeader, Sidebar } from '../../Elements';
 
 // UI
 import { Logo } from '../../UI';
 
 // Components
-const { Footer } = Layout;
+const { Content, Footer } = Layout;
 
 const Container = props => {
   return (
@@ -34,6 +33,11 @@ const Container = props => {
       <Sidebar />
       <Layout>
         <RepositoryHeader />
+        <Content style={{ margin: '16px' }}>
+          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+            {props.children}
+          </div>
+        </Content>
         <Footer style={{ textAlign: 'center' }}>
           <Logo width={25} height={25} /> Apache DRAT
         </Footer>

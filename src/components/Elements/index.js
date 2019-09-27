@@ -13,24 +13,9 @@
  *   the License.
  */
 
-// Packages
-import React, { Component } from 'react';
-
-// Layout
-import Container from '../../components/Layout/Container';
-
 // Elements
-import { ProjectsTable } from '../../components/Elements';
+import ProjectsTable from './ProjectsTable';
+import RepositoryHeader from './RepositoryHeader';
+import Sidebar from './Sidebar';
 
-class Summary extends Component {
-  render() {
-    return (
-      <Container>
-        <p>Loading...</p>
-        <ProjectsTable />
-      </Container>
-    );
-  }
-}
-
-export default Summary;
+export { ProjectsTable, RepositoryHeader, Sidebar };
