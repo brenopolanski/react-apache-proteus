@@ -30,8 +30,10 @@
     "axios": "^0.18.0",
     "lodash": "^4.17.15",
     "react": "^16.8.6",
+    "react-content-loader": "^4.3.0",
     "react-dom": "^16.7.0",
     "react-fast-compare": "^2.0.4",
+    "react-highlight-words": "^0.16.0",
     "react-router-dom": "^4.2.2",
     "susy": "^2.2.12"
   },
