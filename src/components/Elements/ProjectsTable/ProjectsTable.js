@@ -28,6 +28,8 @@ import { LicenseService } from '../../../services';
 const { Content } = Layout;
 
 class ProjectsTable extends Component {
+  _isMounted = false;
+
   state = {
     docs: [],
     searchText: '',
@@ -37,7 +39,13 @@ class ProjectsTable extends Component {
   };
 
   componentDidMount() {
+    this._isMounted = true;
     this.callApiLoadData();
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+    LicenseService.cancelRequest();
   }
 
   callApiLoadData = () => {
@@ -48,7 +56,7 @@ class ProjectsTable extends Component {
 
     LicenseService.loadData()
       .then(res => {
-        if (res.status === 200) {
+        if (this._isMounted && res.status === 200) {
           const { data } = res;
           const { docs } = data.response;
 
@@ -71,10 +79,12 @@ class ProjectsTable extends Component {
         }
       })
       .catch(error => {
-        this.setState({
-          loading: false,
-          error: true
-        });
+        if (this._isMounted) {
+          this.setState({
+            loading: false,
+            error: true
+          });
+        }
       });
   };
 
@@ -87,13 +97,11 @@ class ProjectsTable extends Component {
     }) => (
       <div style={{ padding: 8 }}>
         <Input
-          ref={node => {
-            this.searchInput = node;
-          }}
+          ref={node => (this.searchInput = node)}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          onChange={event =>
+            setSelectedKeys(event.target.value ? [event.target.value] : [])
           }
           onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
           style={{ width: 188, marginBottom: 8, display: 'block' }}
@@ -119,22 +127,26 @@ class ProjectsTable extends Component {
     filterIcon: filtered => (
       <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
-    onFilter: (value, record) =>
-      record[dataIndex]
+
+    onFilter: (value, record) => {
+      return record[dataIndex]
         .toString()
         .toLowerCase()
-        .includes(value.toLowerCase()),
+        .includes(value.toLowerCase());
+    },
+
     onFilterDropdownVisibleChange: visible => {
       if (visible) {
         setTimeout(() => this.searchInput.select());
       }
     },
+
     render: text => (
       <Highlighter
         highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
         searchWords={[this.state.searchText]}
-        autoEscape
         textToHighlight={text.toString()}
+        autoEscape
       />
     )
   });
@@ -187,7 +199,14 @@ class ProjectsTable extends Component {
         title: 'Description',
         dataIndex: 'description',
         key: 'description',
+        width: 350,
         ...this.getColumnSearchProps('description')
+      },
+      {
+        title: 'Audit',
+        key: 'audit',
+        align: 'right',
+        render: (text, record) => <Button type="primary" icon="file-text" />
       }
     ];
 
