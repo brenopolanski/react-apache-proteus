@@ -15,5 +15,6 @@
 
 // UI
 import Logo from './Logo';
+import TableRowSkeleton from './TableRowSkeleton';
 
-export { Logo };
+export { Logo, TableRowSkeleton };

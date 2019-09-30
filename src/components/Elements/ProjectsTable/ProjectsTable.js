@@ -18,6 +18,9 @@ import React, { Component } from 'react';
 import { Button, Icon, Input, Layout, Result, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 
+// UI
+import { TableRowSkeleton } from '../../UI';
+
 // Services
 import { LicenseService } from '../../../services';
 
@@ -46,10 +49,10 @@ class ProjectsTable extends Component {
     LicenseService.loadData()
       .then(res => {
         if (res.status === 200) {
-          console.log(res);
-
           const { data } = res;
           const { docs } = data.response;
+
+          console.log(docs);
 
           this.setState({
             docs: docs.map(doc => {
@@ -170,13 +173,14 @@ class ProjectsTable extends Component {
         title: 'Repository',
         dataIndex: 'repo',
         key: 'repo',
-        width: '20%',
+        width: 350,
         ...this.getColumnSearchProps('repo')
       },
       {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
+        width: 350,
         ...this.getColumnSearchProps('name')
       },
       {
@@ -187,7 +191,7 @@ class ProjectsTable extends Component {
       }
     ];
 
-    return <Table columns={columns} dataSource={docs} />;
+    return <Table scroll={{ y: 400 }} columns={columns} dataSource={docs} />;
   }
 
   render() {
@@ -203,7 +207,7 @@ class ProjectsTable extends Component {
               this.renderError()
             )
           ) : (
-            <p>Loading...</p>
+            <TableRowSkeleton />
           )}
         </div>
       </Content>
