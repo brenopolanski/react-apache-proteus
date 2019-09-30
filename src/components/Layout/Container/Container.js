@@ -25,7 +25,7 @@ import { RepositoryHeader, Sidebar } from '../../Elements';
 import { Logo } from '../../UI';
 
 // Components
-const { Content, Footer } = Layout;
+const { Footer } = Layout;
 
 const Container = props => {
   return (
@@ -33,11 +33,7 @@ const Container = props => {
       <Sidebar />
       <Layout>
         <RepositoryHeader />
-        <Content style={{ margin: '16px' }}>
-          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-            {props.children}
-          </div>
-        </Content>
+        {props.children}
         <Footer style={{ textAlign: 'center' }}>
           <Logo width={25} height={25} /> Apache DRAT
         </Footer>

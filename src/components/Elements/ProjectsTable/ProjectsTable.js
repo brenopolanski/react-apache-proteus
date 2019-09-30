@@ -15,9 +15,13 @@
 
 // Packages
 import React, { Component } from 'react';
+import { Layout } from 'antd';
 
 // Services
 import { LicenseService } from '../../../services';
+
+// Components
+const { Content } = Layout;
 
 class ProjectsTable extends Component {
   componentDidMount() {
@@ -35,7 +39,11 @@ class ProjectsTable extends Component {
   };
 
   render() {
-    return <div>Projects Table</div>;
+    return (
+      <Content style={{ margin: '16px' }}>
+        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}></div>
+      </Content>
+    );
   }
 }
 

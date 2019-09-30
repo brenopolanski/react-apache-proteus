@@ -26,7 +26,6 @@ class Summary extends Component {
   render() {
     return (
       <Container>
-        <p>Loading...</p>
         <ProjectsTable />
       </Container>
     );

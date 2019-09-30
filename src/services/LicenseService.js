@@ -14,7 +14,7 @@
  */
 
 // Packages
-import axios from 'axios';
+import axios, { CancelToken } from 'axios';
 
 // Utils
 import Helpers from '../utils/Helpers';
@@ -23,7 +23,6 @@ import Helpers from '../utils/Helpers';
 const REST_URL = '/solr/statistics/select';
 
 // Axios Cancellation
-const CancelToken = axios.CancelToken;
 let axiosCancelRequest;
 const cancelToken = {
   cancelToken: new CancelToken(function executor(c) {
@@ -47,7 +46,9 @@ class LicenseService {
       if (numFound !== null && numFound > 10) {
         response = await axios.get(
           `${REST_URL}?q=type:project&rows=${numFound}&wt=json`,
-          { ...cancelToken }
+          {
+            ...cancelToken
+          }
         );
       }
     } catch (error) {
@@ -62,9 +63,74 @@ class LicenseService {
     return response;
   }
 
-  // static async loadLicenseData() {}
+  static async loadLicenseData(repo) {
+    let response;
 
-  // static async loadFileDetails() {}
+    try {
+      // TODO: Test using id:"${repo}"
+      response = await axios.get(
+        `${REST_URL}?q=id:"${repo}"&fl=license_*&wt=json`,
+        {
+          ...cancelToken
+        }
+      );
+
+      const { data } = response;
+      const { numFound } = data.response;
+
+      if (numFound !== null) {
+        response = await axios.get(
+          `${REST_URL}?q=id:"${repo}"&fl=license_*&rows=${numFound}&wt=json`,
+          {
+            ...cancelToken
+          }
+        );
+      }
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → LicenseService.js → loadLicenseData()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
+  static async loadFileDetails(repo) {
+    let response;
+
+    try {
+      response = await axios.get(
+        `${REST_URL}?q=parent:"${repo}"&rows=5000&wt=json`,
+        {
+          ...cancelToken
+        }
+      );
+
+      // TODO ADD SOME IF (numFound) {...}
+
+      const { data } = response;
+      const { numFound } = data.response;
+
+      response = await axios.get(
+        `${REST_URL}?q=parent:"${repo}"&rows=${numFound}&wt=json`,
+        {
+          ...cancelToken
+        }
+      );
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → LicenseService.js → loadFileDetails()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
 
   static cancelRequest() {
     // Cancel the axios request
