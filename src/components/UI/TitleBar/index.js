@@ -13,9 +13,4 @@
  *   the License.
  */
 
-// UI
-import Logo from './Logo';
-import TableRowSkeleton from './TableRowSkeleton';
-import TitleBar from './TitleBar';
-
-export { Logo, TableRowSkeleton, TitleBar };
+export { default } from './TitleBar';

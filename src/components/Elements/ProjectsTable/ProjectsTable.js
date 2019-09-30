@@ -14,12 +14,12 @@
  */
 
 // Packages
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Button, Icon, Input, Layout, Result, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 
 // UI
-import { TableRowSkeleton } from '../../UI';
+import { TableRowSkeleton, TitleBar } from '../../UI';
 
 // Services
 import { LicenseService } from '../../../services';
@@ -210,7 +210,12 @@ class ProjectsTable extends Component {
       }
     ];
 
-    return <Table scroll={{ y: 400 }} columns={columns} dataSource={docs} />;
+    return (
+      <Fragment>
+        <TitleBar title="Projects" />
+        <Table scroll={{ y: 400 }} columns={columns} dataSource={docs} />
+      </Fragment>
+    );
   }
 
   render() {

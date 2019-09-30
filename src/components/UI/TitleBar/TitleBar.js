@@ -13,9 +13,34 @@
  *   the License.
  */
 
-// UI
-import Logo from './Logo';
-import TableRowSkeleton from './TableRowSkeleton';
-import TitleBar from './TitleBar';
+// Packages
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-export { Logo, TableRowSkeleton, TitleBar };
+// Styles
+import './TitleBar.css';
+
+const TitleBar = ({ title, bgColor, titleColor }) => {
+  return (
+    <div className="proteus-title-bar" style={{ backgroundColor: bgColor }}>
+      <div className="proteus-title-bar-content">
+        <h1 className="proteus-title-bar-title" style={{ color: titleColor }}>
+          {title}
+        </h1>
+      </div>
+    </div>
+  );
+};
+
+TitleBar.propTypes = {
+  title: PropTypes.string.isRequired,
+  bgColor: PropTypes.string,
+  titleColor: PropTypes.string
+};
+
+TitleBar.defaultProps = {
+  bgColor: '#002140',
+  titleColor: '#fff'
+};
+
+export default TitleBar;
