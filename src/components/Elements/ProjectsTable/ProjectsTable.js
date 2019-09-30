@@ -186,6 +186,8 @@ class ProjectsTable extends Component {
         dataIndex: 'repo',
         key: 'repo',
         width: 350,
+        sorter: (a, b) => a.repo.length - b.repo.length,
+        sortDirections: ['ascend', 'descend'],
         ...this.getColumnSearchProps('repo')
       },
       {
@@ -193,6 +195,8 @@ class ProjectsTable extends Component {
         dataIndex: 'name',
         key: 'name',
         width: 350,
+        sorter: (a, b) => a.name.length - b.name.length,
+        sortDirections: ['ascend', 'descend'],
         ...this.getColumnSearchProps('name')
       },
       {
@@ -200,6 +204,8 @@ class ProjectsTable extends Component {
         dataIndex: 'description',
         key: 'description',
         width: 350,
+        sorter: (a, b) => a.description.length - b.description.length,
+        sortDirections: ['ascend', 'descend'],
         ...this.getColumnSearchProps('description')
       },
       {
