@@ -15,6 +15,7 @@
 
 // Packages
 import React, { Component } from 'react';
+import isEqual from 'react-fast-compare';
 import { Button, Icon, Input, Result, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 
@@ -41,6 +42,15 @@ class ProjectsTable extends Component {
   componentDidMount() {
     this._isMounted = true;
     this.callApiLoadProjectData();
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      !isEqual(this.state.docs, nextState.docs) ||
+      !isEqual(this.state.searchText, nextState.searchText) ||
+      !isEqual(this.state.loading, nextState.loading) ||
+      !isEqual(this.state.error, nextState.error)
+    );
   }
 
   componentWillUnmount() {

@@ -30,9 +30,9 @@ import Content from '../../Layout/Content';
 import { Loading, TitleBar } from '../../UI';
 
 // Styles
-import './AllMimeTypesChart.css';
+import './LicenseTypesChart.css';
 
-class AllMimeTypesChart extends Component {
+class LicenseTypesChart extends Component {
   _isMounted = false;
 
   state = {
@@ -44,7 +44,7 @@ class AllMimeTypesChart extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    this.callApiLoadSoftwareData();
+    this.callApiLoadLicenseTypesData();
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -60,17 +60,19 @@ class AllMimeTypesChart extends Component {
     LicenseService.cancelRequest();
   }
 
-  callApiLoadSoftwareData = () => {
+  callApiLoadLicenseTypesData = () => {
     this.setState({
       loading: true,
       error: false
     });
 
-    LicenseService.loadSoftwareData()
+    LicenseService.loadLicenseTypesData()
       .then(res => {
         if (this._isMounted && res.status === 200) {
           const { data } = res;
           const { docs } = data.response;
+
+          console.log(docs);
 
           this.setState({ docs, loading: false });
           this.drawChart(docs);
@@ -92,118 +94,126 @@ class AllMimeTypesChart extends Component {
   };
 
   drawChart = docs => {
-    const diameter = 860;
-    const format = d3.format(',d');
-    const bubble = d3
-      .pack()
-      .size([diameter, diameter])
-      .padding(1.5);
-    const svg = d3
-      .select(this.d3Chart)
-      .append('svg')
-      .attr('width', diameter)
-      .attr('height', diameter)
-      .attr('class', 'bubbles-chart');
-    let color = d3.scaleOrdinal(d3.schemeBrBG[11]);
-    const resultingData = [];
-    const mime = {};
-    const nodeClasses = {};
+    var resultingData = [];
+    var result = [];
+    var license = {};
 
-    docs.forEach(doc => {
-      for (const d in doc) {
-        if (doc.hasOwnProperty(d)) {
-          const key = d.split('mime_')[1];
-          const value = doc[d];
-
-          if (typeof mime[key] === 'undefined') {
-            mime[key] = value;
-          } else {
-            mime[key] += value;
-          }
+    for (var i = 0; i < docs.length; i++) {
+      var doc = docs[i];
+      for (var x in doc) {
+        var key = x.split('license_')[1];
+        var value = doc[x];
+        if (typeof license[key] === 'undefined') {
+          license[key] = value;
+        } else {
+          license[key] += value;
         }
       }
+    }
+
+    for (x in license) {
+      var jsonObject = {};
+      jsonObject['key'] = x;
+      jsonObject['y'] = license[x];
+      resultingData.push(jsonObject);
+    }
+
+    resultingData.sort(function(a, b) {
+      return b.y - a.y;
     });
 
-    for (const m in mime) {
-      if (mime.hasOwnProperty(m)) {
-        const obj = {};
-        const jsonObject = {};
-        const child = [];
-
-        obj['name'] = m;
-        jsonObject['name'] = m;
-        jsonObject['size'] = mime[m];
-        child.push(jsonObject);
-        obj['children'] = child;
-        resultingData.push(obj);
-      }
+    for (i = 0; i < resultingData.length; i++) {
+      if (resultingData[i]['y'] === 0) break;
+      result[i] = resultingData[i];
     }
 
-    nodeClasses['name'] = 'flare';
-    nodeClasses['children'] = resultingData;
+    var svg = d3
+        .select(this.d3Chart)
+        .append('svg')
+        .attr('width', 420)
+        .attr('height', 600),
+      width = +svg.attr('width'),
+      height = +svg.attr('height'),
+      radius = Math.min(width, height) / 2,
+      g = svg
+        .append('g')
+        .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
-    let range = d3.schemeBrBG[11];
-    range = range.concat(d3.schemePRGn[11]);
+    var color = d3.scaleOrdinal(d3.schemeSet3);
 
-    color = d3.scaleOrdinal(range);
+    var pie = d3
+      .pie()
+      .sort(null)
+      .value(function(d) {
+        return d.y;
+      });
 
-    const root = d3
-      .hierarchy(this.chartClasses(nodeClasses))
-      .sum(({ value }) => value);
+    var path = d3
+      .arc()
+      .outerRadius(radius - 10)
+      .innerRadius(0);
 
-    bubble(root);
-
-    const node = svg
-      .selectAll('.node')
-      .data(root.children)
+    var label = d3
+      .arc()
+      .outerRadius(radius - 40)
+      .innerRadius(radius - 40);
+    var arc = g
+      .selectAll('.arc')
+      .data(pie(result))
       .enter()
       .append('g')
-      .attr('class', 'node')
-      .attr('transform', ({ x, y }) => `translate(${x},${y})`);
+      .attr('class', 'arc');
 
-    node
-      .append('title')
-      .text(({ data, value }) => `${data.className}: ${format(value)}`);
+    arc
+      .append('path')
+      .attr('d', path)
+      .attr('style', function(d) {
+        return 'fill:' + color(d.data.key);
+      });
 
-    node
-      .append('circle')
-      .attr('r', ({ r }) => r)
-      .attr('style', ({ data }) => `fill:${color(data.className)}`);
-
-    node
+    arc
       .append('text')
-      .attr('dy', '0.3em')
-      .attr(
-        'style',
-        ({ data }) =>
-          `fill: ${
-            tinycolor(color(data.className)).isLight() ? '#000000' : '#ffffff'
-          }`
-      )
-      .style('text-anchor', 'middle')
-      .text(({ data, r }) => data.className.substring(0, r / 3));
-  };
+      .attr('transform', function(d) {
+        return 'translate(' + label.centroid(d) + ')';
+      })
+      .attr('dy', '0.35em')
+      .attr('style', d => {
+        return `fill: ${
+          tinycolor(color(d.data.key)).isLight() ? '#000000' : '#ffffff'
+        }`;
+      })
+      .text(function(d) {
+        return d.data.key;
+      });
 
-  chartClasses = nodeRoot => {
-    const classes = [];
+    var legend = d3
+      .select(this.d3Chart)
+      .append('svg')
+      .attr('class', 'legend')
+      .selectAll('g')
+      .data(pie(result)) //setting the data as we know there are only two set of data[programmar/tester] as per the nest function you have written
+      .enter()
+      .append('g')
+      .attr('transform', function(d, i) {
+        return 'translate(0,' + (i + 1) * 20 + ')';
+      });
 
-    function recurse(name, node) {
-      if (node.children) {
-        node.children.forEach(child => {
-          recurse(node.name, child);
-        });
-      } else {
-        classes.push({
-          packageName: name,
-          className: node.name,
-          value: node.size
-        });
-      }
-    }
+    legend
+      .append('rect')
+      .attr('width', 18)
+      .attr('height', 18)
+      .style('fill', function(d, i) {
+        return color(d.data.key);
+      });
 
-    recurse(null, nodeRoot);
-
-    return { children: classes };
+    legend
+      .append('text')
+      .attr('x', 24)
+      .attr('y', 9)
+      .attr('dy', '0.35em')
+      .text(function(d) {
+        return d.data.key;
+      });
   };
 
   renderError() {
@@ -218,7 +228,7 @@ class AllMimeTypesChart extends Component {
           <Button
             icon="sync"
             type="danger"
-            onClick={this.callApiLoadSoftwareData}
+            onClick={this.callApiLoadLicenseTypesData}
           >
             Refresh
           </Button>
@@ -230,7 +240,7 @@ class AllMimeTypesChart extends Component {
   renderChart() {
     return (
       <div
-        className="proteus-bubbles-chart"
+        className="proteus-license-types-chart"
         ref={node => (this.d3Chart = node)}
       />
     );
@@ -241,7 +251,7 @@ class AllMimeTypesChart extends Component {
 
     return (
       <Content>
-        <TitleBar title="All MIME Types" />
+        <TitleBar title="License Types" />
         {!loading ? (
           !error ? (
             this.renderChart()
@@ -256,4 +266,4 @@ class AllMimeTypesChart extends Component {
   }
 }
 
-export default AllMimeTypesChart;
+export default LicenseTypesChart;

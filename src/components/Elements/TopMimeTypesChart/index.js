@@ -13,38 +13,4 @@
  *   the License.
  */
 
-// Packages
-import React, { Component } from 'react';
-import { Row, Col } from 'antd';
-
-// Layout
-import Container from '../../components/Layout/Container';
-
-// Elements
-import {
-  AllMimeTypesChart,
-  LicenseTypesChart,
-  ProjectsTable,
-  TopMimeTypesChart
-} from '../../components/Elements';
-
-class Summary extends Component {
-  render() {
-    return (
-      <Container>
-        <ProjectsTable />
-        <AllMimeTypesChart />
-        <Row>
-          <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-            <LicenseTypesChart />
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-            <TopMimeTypesChart />
-          </Col>
-        </Row>
-      </Container>
-    );
-  }
-}
-
-export default Summary;
+export { default } from './TopMimeTypesChart';

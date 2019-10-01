@@ -15,36 +15,21 @@
 
 // Packages
 import React, { Component } from 'react';
-import { Row, Col } from 'antd';
 
 // Layout
-import Container from '../../components/Layout/Container';
+import Content from '../../Layout/Content';
 
-// Elements
-import {
-  AllMimeTypesChart,
-  LicenseTypesChart,
-  ProjectsTable,
-  TopMimeTypesChart
-} from '../../components/Elements';
+// UI
+import { Loading, TitleBar } from '../../UI';
 
-class Summary extends Component {
+class TopMimeTypesChart extends Component {
   render() {
     return (
-      <Container>
-        <ProjectsTable />
-        <AllMimeTypesChart />
-        <Row>
-          <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-            <LicenseTypesChart />
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-            <TopMimeTypesChart />
-          </Col>
-        </Row>
-      </Container>
+      <Content>
+        <TitleBar title="Top MIME Types" />
+      </Content>
     );
   }
 }
 
-export default Summary;
+export default TopMimeTypesChart;

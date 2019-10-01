@@ -166,6 +166,40 @@ class LicenseService {
     return response;
   }
 
+  static async loadLicenseTypesData() {
+    let response;
+
+    try {
+      response = await axios.get(
+        `${REST_URL}?q=type:software&fl=license_*&wt=json`,
+        {
+          ...cancelToken
+        }
+      );
+
+      const { data } = response;
+      const { numFound } = data.response;
+
+      if (numFound !== null) {
+        response = await axios.get(
+          `${REST_URL}?q=type:software&rows=${numFound}&fl=license_*&wt=json`,
+          {
+            ...cancelToken
+          }
+        );
+      }
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → LicenseService.js → loadLicenseTypesData()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
   static cancelRequest() {
     // Cancel the axios request
     // Reference: https://github.com/axios/axios#cancellation
