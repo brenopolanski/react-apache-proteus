@@ -15,11 +15,11 @@
   min-height: 100vh;
 
   .proteus-container-sidebar {
-    &.collapsed {
+    &.proteus-collapsed {
       margin-left: 80px;
     }
 
-    &.no-collapsed {
+    &.proteus-no-collapsed {
       margin-left: 200px;
     }
   }

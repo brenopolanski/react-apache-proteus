@@ -47,8 +47,8 @@ class Container extends PureComponent {
         />
         <Layout
           className={classNames('proteus-container-sidebar', {
-            collapsed: sidebarCollapsed,
-            'no-collapsed': !sidebarCollapsed
+            'proteus-collapsed': sidebarCollapsed,
+            'proteus-no-collapsed': !sidebarCollapsed
           })}
         >
           <RepositoryHeader />

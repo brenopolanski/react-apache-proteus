@@ -15,6 +15,7 @@
 
 // Packages
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { Icon, Layout, Menu } from 'antd';
 
 // UI
@@ -28,22 +29,14 @@ const { Sider } = Layout;
 const { Item } = Menu;
 
 class Sidebar extends PureComponent {
-  state = {
-    collapsed: true
-  };
-
-  onCollapse = collapsed => {
-    this.setState({ collapsed });
-  };
-
   render() {
-    const { collapsed } = this.state;
+    const { collapsed, onCollapse } = this.props;
 
     return (
       <Sider
         className="proteus-sidebar"
         collapsed={collapsed}
-        onCollapse={this.onCollapse}
+        onCollapse={onCollapse}
         collapsible
       >
         {collapsed ? (
@@ -65,5 +58,14 @@ class Sidebar extends PureComponent {
     );
   }
 }
+
+Sidebar.propTypes = {
+  collapsed: PropTypes.bool,
+  onCollapse: PropTypes.func
+};
+
+Sidebar.defaultProps = {
+  collapsed: true
+};
 
 export default Sidebar;
