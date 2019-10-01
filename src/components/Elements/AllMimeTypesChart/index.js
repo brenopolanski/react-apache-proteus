@@ -13,24 +13,4 @@
  *   the License.
  */
 
-// Packages
-import React, { Component } from 'react';
-
-// Layout
-import Container from '../../components/Layout/Container';
-
-// Elements
-import { AllMimeTypesChart, ProjectsTable } from '../../components/Elements';
-
-class Summary extends Component {
-  render() {
-    return (
-      <Container>
-        <ProjectsTable />
-        <AllMimeTypesChart />
-      </Container>
-    );
-  }
-}
-
-export default Summary;
+export { default } from './AllMimeTypesChart';

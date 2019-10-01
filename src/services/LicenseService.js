@@ -32,7 +32,7 @@ const cancelToken = {
 };
 
 class LicenseService {
-  static async loadData() {
+  static async loadProjectData() {
     let response;
 
     try {
@@ -53,7 +53,7 @@ class LicenseService {
       }
     } catch (error) {
       Helpers.axiosHandleErrors(
-        'services → LicenseService.js → loadData()',
+        'services → LicenseService.js → loadProjectData()',
         error
       );
 
@@ -123,6 +123,40 @@ class LicenseService {
     } catch (error) {
       Helpers.axiosHandleErrors(
         'services → LicenseService.js → loadFileDetails()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
+  static async loadSoftwareData() {
+    let response;
+
+    try {
+      response = await axios.get(
+        `${REST_URL}?q=type:software&fl=mime_*&wt=json`,
+        {
+          ...cancelToken
+        }
+      );
+
+      const { data } = response;
+      const { numFound } = data.response;
+
+      if (numFound !== null) {
+        response = await axios.get(
+          `${REST_URL}?q=type:software&rows=${numFound}&fl=mime_*&wt=json`,
+          {
+            ...cancelToken
+          }
+        );
+      }
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → LicenseService.js → loadSoftwareData()',
         error
       );
 

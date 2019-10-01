@@ -18,11 +18,11 @@ import React, { Component, Fragment } from 'react';
 import { Button, Icon, Input, Layout, Result, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 
-// UI
-import { TableRowSkeleton, TitleBar } from '../../UI';
-
 // Services
 import { LicenseService } from '../../../services';
+
+// UI
+import { TableRowSkeleton, TitleBar } from '../../UI';
 
 // Components
 const { Content } = Layout;
@@ -40,7 +40,7 @@ class ProjectsTable extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    this.callApiLoadData();
+    this.callApiLoadProjectData();
   }
 
   componentWillUnmount() {
@@ -48,13 +48,13 @@ class ProjectsTable extends Component {
     LicenseService.cancelRequest();
   }
 
-  callApiLoadData = () => {
+  callApiLoadProjectData = () => {
     this.setState({
       loading: true,
       error: false
     });
 
-    LicenseService.loadData()
+    LicenseService.loadProjectData()
       .then(res => {
         if (this._isMounted && res.status === 200) {
           const { data } = res;
@@ -124,6 +124,7 @@ class ProjectsTable extends Component {
         </Button>
       </div>
     ),
+
     filterIcon: filtered => (
       <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
@@ -170,7 +171,11 @@ class ProjectsTable extends Component {
         title={errorMsg}
         subTitle="Try again:"
         extra={
-          <Button icon="sync" type="danger" onClick={this.callApiLoadData}>
+          <Button
+            icon="sync"
+            type="danger"
+            onClick={this.callApiLoadProjectData}
+          >
             Refresh
           </Button>
         }
