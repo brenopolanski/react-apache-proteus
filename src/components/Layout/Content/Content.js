@@ -14,28 +14,18 @@
  */
 
 // Packages
-import React, { Component } from 'react';
-import { Input, Layout } from 'antd';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 // Styles
-import './RepositoryHeader.css';
+import './Content.css';
 
-// Components
-const { Header } = Layout;
-const { Search } = Input;
+const Content = props => {
+  return <div className="proteus-layout-content">{props.children}</div>;
+};
 
-class RepositoryHeader extends Component {
-  render() {
-    return (
-      <Header className="proteus-repository-header">
-        <Search
-          placeholder="Repository to add to DRAT"
-          enterButton="RUN"
-          size="large"
-        />
-      </Header>
-    );
-  }
-}
+Content.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
-export default RepositoryHeader;
+export default Content;

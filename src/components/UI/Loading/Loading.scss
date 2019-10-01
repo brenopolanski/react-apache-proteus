@@ -11,31 +11,19 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-@import '../helpers/variables';
-
-.proteus-app-loading {
-  position: fixed;
-  z-index: 9999;
+.proteus-loading {
+  position: relative;
   display: flex;
+  overflow: hidden;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
-  margin: 0;
-  padding: 0;
-  opacity: 1;
-  background-color: $proteus-color-primary;
-  transition: opacity cubic-bezier(0.4, 0, 0.2, 1) 436ms;
-  pointer-events: none;
 
-  &.proteus-loading-available {
-    opacity: 0;
-  }
-
-  .proteus-logo {
+  .proteus-loading-logo {
     img {
-      width: 170px;
+      opacity: 0.5;
     }
   }
 
@@ -45,30 +33,30 @@
     right: 0;
     bottom: 0;
     left: 0;
-    width: 250px;
-    height: 250px;
+    width: 100px;
+    height: 100px;
     margin: auto;
     transform-origin: center center;
-    animation: rotate 2s linear infinite;
+    animation: proteus-animation-rotate 2s linear infinite;
 
     .proteus-loading-path {
-      animation: dash 1.5s ease-in-out infinite;
+      animation: proteus-animation-dash 1.5s ease-in-out infinite;
 
       stroke-dasharray: 1, 200;
       stroke-dashoffset: 0;
       stroke-linecap: round;
-      stroke: $proteus-color-secondary;
+      stroke: #ddd;
     }
   }
 }
 
-@keyframes rotate {
+@keyframes proteus-animation-rotate {
   100% {
     transform: rotate(360deg);
   }
 }
 
-@keyframes dash {
+@keyframes proteus-animation-dash {
   0% {
     stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;

@@ -20,6 +20,9 @@ import { Icon, Layout, Menu } from 'antd';
 // UI
 import { Logo } from '../../UI';
 
+// Styles
+import './Sidebar.css';
+
 // Components
 const { Sider } = Layout;
 const { Item } = Menu;
@@ -37,7 +40,12 @@ class Sidebar extends PureComponent {
     const { collapsed } = this.state;
 
     return (
-      <Sider collapsed={collapsed} onCollapse={this.onCollapse} collapsible>
+      <Sider
+        className="proteus-sidebar"
+        collapsed={collapsed}
+        onCollapse={this.onCollapse}
+        collapsible
+      >
         {collapsed ? (
           <Logo width={50} height={50} center />
         ) : (

@@ -15,8 +15,9 @@
 
 // Elements
 import AllMimeTypesChart from './AllMimeTypesChart';
+import Footer from './Footer';
 import ProjectsTable from './ProjectsTable';
 import RepositoryHeader from './RepositoryHeader';
 import Sidebar from './Sidebar';
 
-export { AllMimeTypesChart, ProjectsTable, RepositoryHeader, Sidebar };
+export { AllMimeTypesChart, Footer, ProjectsTable, RepositoryHeader, Sidebar };

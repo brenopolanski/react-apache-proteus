@@ -14,19 +14,22 @@
  */
 
 // Packages
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import * as d3 from 'd3';
 import tinycolor from 'tinycolor2';
-import { Button, Layout, Result } from 'antd';
+import { Button, Result } from 'antd';
 
 // Services
 import { LicenseService } from '../../../services';
 
-// UI
-import { TitleBar } from '../../UI';
+// Layout
+import Content from '../../Layout/Content';
 
-// Components
-const { Content } = Layout;
+// UI
+import { Loading, TitleBar } from '../../UI';
+
+// Styles
+import './AllMimeTypesChart.css';
 
 class AllMimeTypesChart extends Component {
   _isMounted = false;
@@ -93,7 +96,7 @@ class AllMimeTypesChart extends Component {
       .append('svg')
       .attr('width', diameter)
       .attr('height', diameter)
-      .attr('class', 'bubble');
+      .attr('class', 'bubbles-chart');
     let color = d3.scaleOrdinal(d3.schemeBrBG[11]);
     const resultingData = [];
     const mime = {};
@@ -114,16 +117,18 @@ class AllMimeTypesChart extends Component {
     });
 
     for (const m in mime) {
-      const obj = {};
-      const jsonObject = {};
-      const child = [];
+      if (mime.hasOwnProperty(m)) {
+        const obj = {};
+        const jsonObject = {};
+        const child = [];
 
-      obj['name'] = m;
-      jsonObject['name'] = m;
-      jsonObject['size'] = mime[m];
-      child.push(jsonObject);
-      obj['children'] = child;
-      resultingData.push(obj);
+        obj['name'] = m;
+        jsonObject['name'] = m;
+        jsonObject['size'] = mime[m];
+        child.push(jsonObject);
+        obj['children'] = child;
+        resultingData.push(obj);
+      }
     }
 
     var test = {};
@@ -222,10 +227,10 @@ class AllMimeTypesChart extends Component {
 
   renderChart() {
     return (
-      <Fragment>
-        <TitleBar title="All MIME Types" />
-        <div ref={node => (this.d3Chart = node)} />
-      </Fragment>
+      <div
+        className="proteus-bubbles-chart"
+        ref={node => (this.d3Chart = node)}
+      />
     );
   }
 
@@ -233,18 +238,17 @@ class AllMimeTypesChart extends Component {
     const { loading, error } = this.state;
 
     return (
-      <Content style={{ margin: '16px' }}>
-        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-          {!loading ? (
-            !error ? (
-              this.renderChart()
-            ) : (
-              this.renderError()
-            )
+      <Content>
+        <TitleBar title="All MIME Types" />
+        {!loading ? (
+          !error ? (
+            this.renderChart()
           ) : (
-            <p>loading...</p>
-          )}
-        </div>
+            this.renderError()
+          )
+        ) : (
+          <Loading style={{ height: 336 }} />
+        )}
       </Content>
     );
   }

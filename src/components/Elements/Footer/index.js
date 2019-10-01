@@ -13,29 +13,4 @@
  *   the License.
  */
 
-// Packages
-import React, { Component } from 'react';
-import { Input, Layout } from 'antd';
-
-// Styles
-import './RepositoryHeader.css';
-
-// Components
-const { Header } = Layout;
-const { Search } = Input;
-
-class RepositoryHeader extends Component {
-  render() {
-    return (
-      <Header className="proteus-repository-header">
-        <Search
-          placeholder="Repository to add to DRAT"
-          enterButton="RUN"
-          size="large"
-        />
-      </Header>
-    );
-  }
-}
-
-export default RepositoryHeader;
+export { default } from './Footer';

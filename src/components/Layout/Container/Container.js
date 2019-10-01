@@ -14,33 +14,51 @@
  */
 
 // Packages
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { Layout } from 'antd';
 
 // Elements
-import { RepositoryHeader, Sidebar } from '../../Elements';
+import { Footer, RepositoryHeader, Sidebar } from '../../Elements';
 
-// UI
-import { Logo } from '../../UI';
+// Styles
+import './Container.css';
 
-// Components
-const { Footer } = Layout;
+class Container extends PureComponent {
+  state = {
+    sidebarCollapsed: true
+  };
 
-const Container = props => {
-  return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sidebar />
-      <Layout>
-        <RepositoryHeader />
-        {props.children}
-        <Footer style={{ textAlign: 'center' }}>
-          <Logo width={25} height={25} /> Apache DRAT
-        </Footer>
+  handleSidebarCollapse = () => {
+    this.setState(prevState => ({
+      sidebarCollapsed: !prevState.sidebarCollapsed
+    }));
+  };
+
+  render() {
+    const { sidebarCollapsed } = this.state;
+
+    return (
+      <Layout className="proteus-container">
+        <Sidebar
+          collapsed={sidebarCollapsed}
+          onCollapse={this.handleSidebarCollapse}
+        />
+        <Layout
+          className={classNames('proteus-container-sidebar', {
+            collapsed: sidebarCollapsed,
+            'no-collapsed': !sidebarCollapsed
+          })}
+        >
+          <RepositoryHeader />
+          {this.props.children}
+          <Footer />
+        </Layout>
       </Layout>
-    </Layout>
-  );
-};
+    );
+  }
+}
 
 Container.propTypes = {
   children: PropTypes.node.isRequired

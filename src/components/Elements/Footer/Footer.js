@@ -14,28 +14,18 @@
  */
 
 // Packages
-import React, { Component } from 'react';
-import { Input, Layout } from 'antd';
+import React from 'react';
+import { Layout } from 'antd';
 
-// Styles
-import './RepositoryHeader.css';
+// UI
+import { Logo } from '../../UI';
 
-// Components
-const { Header } = Layout;
-const { Search } = Input;
+const Footer = () => {
+  return (
+    <Layout.Footer style={{ textAlign: 'center' }}>
+      <Logo width={25} height={25} /> Apache DRAT
+    </Layout.Footer>
+  );
+};
 
-class RepositoryHeader extends Component {
-  render() {
-    return (
-      <Header className="proteus-repository-header">
-        <Search
-          placeholder="Repository to add to DRAT"
-          enterButton="RUN"
-          size="large"
-        />
-      </Header>
-    );
-  }
-}
-
-export default RepositoryHeader;
+export default Footer;

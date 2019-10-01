@@ -11,27 +11,12 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-.proteus-title-bar {
-  margin-top: 0;
-  padding-right: 0;
-  padding-left: 0;
-  background-color: #002140;
-  transform: translateY(0px);
+.proteus-layout-content {
+  display: block;
+  min-height: 360px;
+  margin: 16px;
+  padding: 24px;
+  background-color: #fff;
 
-  .proteus-title-bar-content {
-    display: flex;
-    align-items: center;
-    height: 64px;
-    padding: 0 24px;
-
-    .proteus-title-bar-title {
-      overflow: hidden;
-      font-size: 1.25rem;
-      font-weight: 500;
-      color: #fff;
-      white-space: nowrap;
-      letter-spacing: 0.02em;
-      text-overflow: ellipsis;
-    }
-  }
+  flex: auto;
 }

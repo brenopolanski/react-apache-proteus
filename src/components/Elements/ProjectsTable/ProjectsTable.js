@@ -14,18 +14,18 @@
  */
 
 // Packages
-import React, { Component, Fragment } from 'react';
-import { Button, Icon, Input, Layout, Result, Table } from 'antd';
+import React, { Component } from 'react';
+import { Button, Icon, Input, Result, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 
 // Services
 import { LicenseService } from '../../../services';
 
+// Layout
+import Content from '../../Layout/Content';
+
 // UI
 import { TableRowSkeleton, TitleBar } from '../../UI';
-
-// Components
-const { Content } = Layout;
 
 class ProjectsTable extends Component {
   _isMounted = false;
@@ -221,30 +221,24 @@ class ProjectsTable extends Component {
       }
     ];
 
-    return (
-      <Fragment>
-        <TitleBar title="Projects" />
-        <Table scroll={{ y: 400 }} columns={columns} dataSource={docs} />
-      </Fragment>
-    );
+    return <Table scroll={{ y: 400 }} columns={columns} dataSource={docs} />;
   }
 
   render() {
     const { loading, error } = this.state;
 
     return (
-      <Content style={{ margin: '16px' }}>
-        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-          {!loading ? (
-            !error ? (
-              this.renderTable()
-            ) : (
-              this.renderError()
-            )
+      <Content>
+        <TitleBar title="Projects" />
+        {!loading ? (
+          !error ? (
+            this.renderTable()
           ) : (
-            <TableRowSkeleton />
-          )}
-        </div>
+            this.renderError()
+          )
+        ) : (
+          <TableRowSkeleton />
+        )}
       </Content>
     );
   }

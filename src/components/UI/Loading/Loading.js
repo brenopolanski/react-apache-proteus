@@ -14,28 +14,33 @@
  */
 
 // Packages
-import React, { Component } from 'react';
-import { Input, Layout } from 'antd';
+import React from 'react';
+
+// UI
+import { Logo } from '../';
 
 // Styles
-import './RepositoryHeader.css';
+import './Loading.css';
 
-// Components
-const { Header } = Layout;
-const { Search } = Input;
-
-class RepositoryHeader extends Component {
-  render() {
-    return (
-      <Header className="proteus-repository-header">
-        <Search
-          placeholder="Repository to add to DRAT"
-          enterButton="RUN"
-          size="large"
+const Loading = ({ style }) => {
+  return (
+    <div className="proteus-loading" style={style}>
+      <div className="proteus-loading-logo">
+        <Logo width={50} height={50} />
+      </div>
+      <svg className="proteus-loading-spinner" viewBox="25 25 50 50">
+        <circle
+          className="proteus-loading-path"
+          cx="50"
+          cy="50"
+          r="20"
+          fill="none"
+          strokeWidth="2"
+          strokeMiterlimit="10"
         />
-      </Header>
-    );
-  }
-}
+      </svg>
+    </div>
+  );
+};
 
-export default RepositoryHeader;
+export default Loading;
