@@ -100,6 +100,7 @@ class AllMimeTypesChart extends Component {
     let color = d3.scaleOrdinal(d3.schemeBrBG[11]);
     const resultingData = [];
     const mime = {};
+    const nodeClasses = {};
 
     docs.forEach(doc => {
       for (const d in doc) {
@@ -131,76 +132,70 @@ class AllMimeTypesChart extends Component {
       }
     }
 
-    var test = {};
-    test['name'] = 'flare';
-    test['children'] = resultingData;
+    nodeClasses['name'] = 'flare';
+    nodeClasses['children'] = resultingData;
 
-    var range = d3.schemeBrBG[11];
+    let range = d3.schemeBrBG[11];
     range = range.concat(d3.schemePRGn[11]);
 
     color = d3.scaleOrdinal(range);
 
-    var root = d3.hierarchy(this.classes(test)).sum(function(d) {
-      return d.value;
-    });
+    const root = d3
+      .hierarchy(this.classes(nodeClasses))
+      .sum(({ value }) => value);
 
     bubble(root);
 
-    var node = svg
+    const node = svg
       .selectAll('.node')
       .data(root.children)
-
       .enter()
       .append('g')
       .attr('class', 'node')
-      .attr('transform', function(d) {
-        return 'translate(' + d.x + ',' + d.y + ')';
-      });
+      .attr('transform', ({ x, y }) => `translate(${x},${y})`);
 
-    node.append('title').text(function(d) {
-      return d.data.className + ': ' + format(d.value);
-    });
+    node
+      .append('title')
+      .text(({ data, value }) => `${data.className}: ${format(value)}`);
 
     node
       .append('circle')
-      .attr('r', function(d) {
-        return d.r;
-      })
-      .attr('style', function(d) {
-        return 'fill:' + color(d.data.className);
-      });
+      .attr('r', ({ r }) => r)
+      .attr('style', ({ data }) => `fill:${color(data.className)}`);
 
     node
       .append('text')
       .attr('dy', '.3em')
-      .attr('style', d => {
-        return `fill: ${
-          tinycolor(color(d.data.className)).isLight() ? '#000000' : '#ffffff'
-        }`;
-      })
+      .attr(
+        'style',
+        ({ data }) =>
+          `fill: ${
+            tinycolor(color(data.className)).isLight() ? '#000000' : '#ffffff'
+          }`
+      )
       .style('text-anchor', 'middle')
-      .text(function(d) {
-        return d.data.className.substring(0, d.r / 3);
-      });
+      .text(({ data, r }) => data.className.substring(0, r / 3));
   };
 
   classes = root => {
-    var classes = [];
+    const classes = [];
 
     function recurse(name, node) {
-      if (node.children)
-        node.children.forEach(function(child) {
+      if (node.children) {
+        node.children.forEach(child => {
           recurse(node.name, child);
         });
-      else
+      } else {
         classes.push({
           packageName: name,
           className: node.name,
           value: node.size
         });
+      }
     }
 
     recurse(null, root);
+
     return { children: classes };
   };
 
