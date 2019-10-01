@@ -94,70 +94,77 @@ class LicenseTypesChart extends Component {
   };
 
   drawChart = docs => {
-    var resultingData = [];
-    var result = [];
-    var license = {};
+    const diameter = 420;
+    const svg = d3
+      .select(this.d3Chart)
+      .append('svg')
+      .attr('width', diameter)
+      .attr('height', diameter)
+      .attr('class', 'proteus-pie-chart');
+    const width = +svg.attr('width');
+    const height = +svg.attr('height');
+    const radius = Math.min(width, height) / 2;
+    const resultingData = [];
+    const result = [];
+    const license = {};
 
-    for (var i = 0; i < docs.length; i++) {
-      var doc = docs[i];
-      for (var x in doc) {
-        var key = x.split('license_')[1];
-        var value = doc[x];
-        if (typeof license[key] === 'undefined') {
-          license[key] = value;
-        } else {
-          license[key] += value;
+    docs.forEach(doc => {
+      for (const d in doc) {
+        if (doc.hasOwnProperty(d)) {
+          const key = d.split('license_')[1];
+          const value = doc[d];
+
+          if (typeof license[key] === 'undefined') {
+            license[key] = value;
+          } else {
+            license[key] += value;
+          }
         }
+      }
+    });
+
+    for (const l in license) {
+      if (license.hasOwnProperty(l)) {
+        const jsonObject = {};
+
+        jsonObject['key'] = l;
+        jsonObject['y'] = license[l];
+        resultingData.push(jsonObject);
       }
     }
 
-    for (x in license) {
-      var jsonObject = {};
-      jsonObject['key'] = x;
-      jsonObject['y'] = license[x];
-      resultingData.push(jsonObject);
-    }
+    resultingData.sort((a, b) => b.y - a.y);
 
-    resultingData.sort(function(a, b) {
-      return b.y - a.y;
-    });
+    for (let i = 0, len = resultingData.length; i < len; i++) {
+      if (resultingData[i]['y'] === 0) {
+        break;
+      }
 
-    for (i = 0; i < resultingData.length; i++) {
-      if (resultingData[i]['y'] === 0) break;
       result[i] = resultingData[i];
     }
 
-    var svg = d3
-        .select(this.d3Chart)
-        .append('svg')
-        .attr('width', 420)
-        .attr('height', 600),
-      width = +svg.attr('width'),
-      height = +svg.attr('height'),
-      radius = Math.min(width, height) / 2,
-      g = svg
-        .append('g')
-        .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+    const g = svg
+      .append('g')
+      .attr('transform', `translate(${width / 2}, ${height / 2})`);
 
-    var color = d3.scaleOrdinal(d3.schemeSet3);
+    const color = d3.scaleOrdinal(d3.schemeSet3);
 
-    var pie = d3
+    const pie = d3
       .pie()
       .sort(null)
-      .value(function(d) {
-        return d.y;
-      });
+      .value(({ y }) => y);
 
-    var path = d3
+    const path = d3
       .arc()
       .outerRadius(radius - 10)
       .innerRadius(0);
 
-    var label = d3
+    const label = d3
       .arc()
       .outerRadius(radius - 40)
       .innerRadius(radius - 40);
-    var arc = g
+
+    const arc = g
       .selectAll('.arc')
       .data(pie(result))
       .enter()
@@ -167,53 +174,43 @@ class LicenseTypesChart extends Component {
     arc
       .append('path')
       .attr('d', path)
-      .attr('style', function(d) {
-        return 'fill:' + color(d.data.key);
-      });
+      .attr('style', ({ data }) => `fill:${color(data.key)}`);
 
     arc
       .append('text')
-      .attr('transform', function(d) {
-        return 'translate(' + label.centroid(d) + ')';
-      })
+      .attr('transform', d => `translate(${label.centroid(d)})`)
       .attr('dy', '0.35em')
-      .attr('style', d => {
-        return `fill: ${
-          tinycolor(color(d.data.key)).isLight() ? '#000000' : '#ffffff'
-        }`;
-      })
-      .text(function(d) {
-        return d.data.key;
-      });
+      .attr(
+        'style',
+        ({ data }) =>
+          `fill: ${
+            tinycolor(color(data.key)).isLight() ? '#000000' : '#ffffff'
+          }`
+      )
+      .text(({ data }) => data.key);
 
-    var legend = d3
+    const legend = d3
       .select(this.d3Chart)
       .append('svg')
-      .attr('class', 'legend')
+      .attr('class', 'proteus-legend-chart')
       .selectAll('g')
-      .data(pie(result)) //setting the data as we know there are only two set of data[programmar/tester] as per the nest function you have written
+      .data(pie(result))
       .enter()
       .append('g')
-      .attr('transform', function(d, i) {
-        return 'translate(0,' + (i + 1) * 20 + ')';
-      });
+      .attr('transform', (d, i) => `translate(0,${(i + 1) * 20})`);
 
     legend
       .append('rect')
       .attr('width', 18)
       .attr('height', 18)
-      .style('fill', function(d, i) {
-        return color(d.data.key);
-      });
+      .style('fill', ({ data }, i) => color(data.key));
 
     legend
       .append('text')
       .attr('x', 24)
       .attr('y', 9)
       .attr('dy', '0.35em')
-      .text(function(d) {
-        return d.data.key;
-      });
+      .text(({ data }) => data.key);
   };
 
   renderError() {

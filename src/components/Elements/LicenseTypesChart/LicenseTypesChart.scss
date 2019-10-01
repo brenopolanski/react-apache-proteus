@@ -12,13 +12,23 @@
 // the License.
 
 .proteus-license-types-chart {
-  .arc text {
-    font: 10px sans-serif;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
 
-    text-anchor: middle;
+  .proteus-pie-chart {
+    .arc text {
+      font: 0.625rem sans-serif;
+
+      text-anchor: middle;
+    }
+
+    .arc path {
+      stroke: transparent;
+    }
   }
 
-  .arc path {
-    stroke: transparent;
+  .proteus-legend-chart {
+    width: 100%;
   }
 }

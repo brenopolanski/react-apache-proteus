@@ -103,7 +103,7 @@ class AllMimeTypesChart extends Component {
       .append('svg')
       .attr('width', diameter)
       .attr('height', diameter)
-      .attr('class', 'bubbles-chart');
+      .attr('class', 'proteus-bubbles-chart');
     let color = d3.scaleOrdinal(d3.schemeBrBG[11]);
     const resultingData = [];
     const mime = {};
@@ -159,7 +159,7 @@ class AllMimeTypesChart extends Component {
       .enter()
       .append('g')
       .attr('class', 'node')
-      .attr('transform', ({ x, y }) => `translate(${x},${y})`);
+      .attr('transform', ({ x, y }) => `translate(${x}, ${y})`);
 
     node
       .append('title')
@@ -230,7 +230,7 @@ class AllMimeTypesChart extends Component {
   renderChart() {
     return (
       <div
-        className="proteus-bubbles-chart"
+        className="proteus-all-mime-types-chart"
         ref={node => (this.d3Chart = node)}
       />
     );
