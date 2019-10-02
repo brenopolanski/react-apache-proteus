@@ -50,13 +50,14 @@ class LicenseTypesChart extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return (
       !isEqual(this.state.docs, nextState.docs) ||
-      !isEqual(this.state.loading, nextState.loading) ||
-      !isEqual(this.state.error, nextState.error)
+      this.state.loading !== nextState.loading ||
+      this.state.error !== nextState.error
     );
   }
 
   componentWillUnmount() {
     this._isMounted = false;
+    this.d3Chart.innerHTML = '';
     LicenseService.cancelRequest();
   }
 

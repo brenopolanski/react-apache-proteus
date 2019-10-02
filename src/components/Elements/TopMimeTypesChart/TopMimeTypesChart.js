@@ -14,9 +14,9 @@
  */
 
 // Packages
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import isEqual from 'react-fast-compare';
-import { Button, Result } from 'antd';
+import { Button, Input, Result } from 'antd';
 import * as d3 from 'd3';
 import tinycolor from 'tinycolor2';
 
@@ -51,14 +51,24 @@ class TopMimeTypesChart extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return (
       !isEqual(this.state.docs, nextState.docs) ||
-      !isEqual(this.state.count, nextState.count) ||
-      !isEqual(this.state.loading, nextState.loading) ||
-      !isEqual(this.state.error, nextState.error)
+      this.state.count !== nextState.count ||
+      this.state.loading !== nextState.loading ||
+      this.state.error !== nextState.error
     );
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { docs, count } = this.state;
+
+    if (prevState.count !== count) {
+      this.d3Chart.innerHTML = '';
+      this.drawChart(docs, count);
+    }
   }
 
   componentWillUnmount() {
     this._isMounted = false;
+    this.d3Chart.innerHTML = '';
     LicenseService.cancelRequest();
   }
 
@@ -71,13 +81,12 @@ class TopMimeTypesChart extends Component {
     LicenseService.loadSoftwareData()
       .then(res => {
         if (this._isMounted && res.status === 200) {
+          const { count } = this.state;
           const { data } = res;
           const { docs } = data.response;
 
-          console.log(docs);
-
           this.setState({ docs, loading: false });
-          this.drawChart(docs);
+          this.drawChart(docs, count);
         } else {
           this.setState({
             loading: false,
@@ -95,8 +104,7 @@ class TopMimeTypesChart extends Component {
       });
   };
 
-  drawChart = docs => {
-    let { count } = this.state;
+  drawChart = (docs, rows) => {
     const diameter = 420;
     const svg = d3
       .select(this.d3Chart)
@@ -112,6 +120,7 @@ class TopMimeTypesChart extends Component {
     const resultingData = [];
     const result = [];
     const mime = {};
+    let count = rows;
 
     docs.forEach(doc => {
       for (const d in doc) {
@@ -220,6 +229,32 @@ class TopMimeTypesChart extends Component {
       .text(({ data }) => data.key);
   };
 
+  handleClickCount = type => {
+    const count = Number(this.state.count);
+    let newCount = type === 'minus' ? count - 1 : count + 1;
+
+    if (newCount < 0) {
+      newCount = 0;
+    } else if (newCount > 50) {
+      newCount = 25;
+    }
+
+    this.setState({ count: Math.round(newCount) });
+  };
+
+  handleChangeCount = event => {
+    const { value } = event.target;
+    let newCount = value;
+
+    if (value < 0) {
+      newCount = 0;
+    } else if (value > 50) {
+      newCount = 25;
+    }
+
+    this.setState({ count: Math.round(newCount) });
+  };
+
   renderError() {
     const { errorMsg } = this.state;
 
@@ -242,19 +277,47 @@ class TopMimeTypesChart extends Component {
   }
 
   renderChart() {
+    const { count } = this.state;
+
     return (
-      <div
-        className="proteus-top-mime-types-chart"
-        ref={node => (this.d3Chart = node)}
-      />
+      <Fragment>
+        <div className="proteus-btn-group-count">
+          <Button
+            className="proteus-btn-minus"
+            type="primary"
+            icon="minus"
+            size="large"
+            onClick={this.handleClickCount.bind(this, 'minus')}
+          />
+          <Input
+            className="proteus-input-count"
+            type="number"
+            size="large"
+            value={count}
+            onChange={this.handleChangeCount}
+          />
+          <Button
+            className="proteus-btn-plus"
+            type="primary"
+            icon="plus"
+            size="large"
+            onClick={this.handleClickCount.bind(this, 'plus')}
+          />
+        </div>
+        <div
+          className="proteus-top-mime-types-chart"
+          ref={node => (this.d3Chart = node)}
+        />
+      </Fragment>
     );
   }
 
   render() {
     const { loading, error } = this.state;
+    const contentStyle = !loading ? { height: 682 } : undefined;
 
     return (
-      <Content style={{ height: 682 }}>
+      <Content style={contentStyle}>
         <TitleBar title="Top MIME Types" />
         {!loading ? (
           !error ? (

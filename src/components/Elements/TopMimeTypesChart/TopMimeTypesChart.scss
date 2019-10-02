@@ -11,6 +11,38 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
+.proteus-btn-group-count {
+  display: flex;
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 20px;
+
+  .proteus-btn-minus {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+
+  .proteus-input-count {
+    border-radius: 0 !important;
+  }
+
+  .proteus-input-count[type='number']::-webkit-outer-spin-button,
+  .proteus-input-count[type='number']::-webkit-inner-spin-button {
+    margin: 0;
+
+    -webkit-appearance: none;
+  }
+
+  .proteus-input-count[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  .proteus-btn-plus {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
+}
+
 .proteus-top-mime-types-chart {
   display: flex;
   flex-direction: row-reverse;

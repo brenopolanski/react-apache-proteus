@@ -47,9 +47,9 @@ class ProjectsTable extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return (
       !isEqual(this.state.docs, nextState.docs) ||
-      !isEqual(this.state.searchText, nextState.searchText) ||
-      !isEqual(this.state.loading, nextState.loading) ||
-      !isEqual(this.state.error, nextState.error)
+      this.state.searchText !== nextState.searchText ||
+      this.state.loading !== nextState.loading ||
+      this.state.error !== nextState.error
     );
   }
 
