@@ -30,10 +30,8 @@ class Container extends PureComponent {
     sidebarCollapsed: true
   };
 
-  handleSidebarCollapse = () => {
-    this.setState(prevState => ({
-      sidebarCollapsed: !prevState.sidebarCollapsed
-    }));
+  handleSidebarCollapse = collapsed => {
+    this.setState({ sidebarCollapsed: collapsed });
   };
 
   render() {
@@ -61,7 +59,7 @@ class Container extends PureComponent {
 }
 
 Container.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node
 };
 
 export default Container;

@@ -14,12 +14,17 @@
  */
 
 // Views
-import { Summary } from './views';
+import { Audit, Summary } from './views';
 
 export const routes = [
   {
     path: '/',
     exact: true,
     component: Summary
+  },
+  {
+    path: '/audit',
+    exact: true,
+    component: Audit
   }
 ];

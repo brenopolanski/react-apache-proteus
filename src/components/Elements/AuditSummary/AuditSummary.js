@@ -14,32 +14,22 @@
  */
 
 // Packages
-import React, { Fragment } from 'react';
-import { Row, Col } from 'antd';
+import React, { Component } from 'react';
 
-// Elements
-import {
-  AllMimeTypesChart,
-  LicenseTypesChart,
-  ProjectsTable,
-  TopMimeTypesChart
-} from '../../components/Elements';
+// Layout
+import Content from '../../Layout/Content';
 
-const Summary = () => {
-  return (
-    <Fragment>
-      <ProjectsTable />
-      <AllMimeTypesChart />
-      <Row>
-        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-          <LicenseTypesChart />
-        </Col>
-        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-          <TopMimeTypesChart />
-        </Col>
-      </Row>
-    </Fragment>
-  );
-};
+// UI
+import { TitleBar } from '../../UI';
 
-export default Summary;
+class AuditSummary extends Component {
+  render() {
+    return (
+      <Content>
+        <TitleBar title="Audit Summary" />
+      </Content>
+    );
+  }
+}
+
+export default AuditSummary;

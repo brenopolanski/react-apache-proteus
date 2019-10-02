@@ -14,6 +14,7 @@
  */
 
 // Views
+import Audit from './Audit';
 import Summary from './Summary';
 
-export { Summary };
+export { Audit, Summary };

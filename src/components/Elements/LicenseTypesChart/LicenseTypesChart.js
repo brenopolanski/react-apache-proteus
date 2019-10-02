@@ -33,8 +33,6 @@ import { Loading, TitleBar } from '../../UI';
 import './LicenseTypesChart.css';
 
 class LicenseTypesChart extends Component {
-  _isMounted = false;
-
   state = {
     docs: [],
     loading: true,
@@ -43,7 +41,6 @@ class LicenseTypesChart extends Component {
   };
 
   componentDidMount() {
-    this._isMounted = true;
     this.callApiLoadLicenseTypesData();
   }
 
@@ -55,12 +52,6 @@ class LicenseTypesChart extends Component {
     );
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-    this.d3Chart.innerHTML = '';
-    LicenseService.cancelRequest();
-  }
-
   callApiLoadLicenseTypesData = () => {
     this.setState({
       loading: true,
@@ -69,7 +60,7 @@ class LicenseTypesChart extends Component {
 
     LicenseService.loadLicenseTypesData()
       .then(res => {
-        if (this._isMounted && res.status === 200) {
+        if (res.status === 200) {
           const { data } = res;
           const { docs } = data.response;
 
@@ -83,12 +74,10 @@ class LicenseTypesChart extends Component {
         }
       })
       .catch(error => {
-        if (this._isMounted) {
-          this.setState({
-            loading: false,
-            error: true
-          });
-        }
+        this.setState({
+          loading: false,
+          error: true
+        });
       });
   };
 

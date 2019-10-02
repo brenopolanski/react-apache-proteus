@@ -16,6 +16,7 @@
 // Packages
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { Icon, Layout, Menu } from 'antd';
 
 // UI
@@ -29,6 +30,16 @@ const { Sider } = Layout;
 const { Item } = Menu;
 
 class Sidebar extends PureComponent {
+  handleClickMenu = ({ item, key }) => {
+    const { history } = this.props;
+
+    if (key === 'summaryMenu') {
+      history.push('/');
+    } else {
+      history.push('/audit');
+    }
+  };
+
   render() {
     const { collapsed, onCollapse } = this.props;
 
@@ -44,7 +55,12 @@ class Sidebar extends PureComponent {
         ) : (
           <Logo width={130} height={50} full center />
         )}
-        <Menu theme="dark" defaultSelectedKeys={['summaryMenu']} mode="inline">
+        <Menu
+          theme="dark"
+          defaultSelectedKeys={['summaryMenu']}
+          mode="inline"
+          onClick={this.handleClickMenu}
+        >
           <Item key="summaryMenu">
             <Icon type="appstore" />
             <span>Summary</span>
@@ -68,4 +84,4 @@ Sidebar.defaultProps = {
   collapsed: true
 };
 
-export default Sidebar;
+export default withRouter(Sidebar);

@@ -14,7 +14,7 @@
  */
 
 // Packages
-import axios, { CancelToken } from 'axios';
+import axios from 'axios';
 
 // Utils
 import Helpers from '../utils/Helpers';
@@ -22,33 +22,19 @@ import Helpers from '../utils/Helpers';
 // Constants
 const REST_URL = '/solr/statistics/select';
 
-// Axios Cancellation
-let axiosCancelRequest;
-const cancelToken = {
-  cancelToken: new CancelToken(function executor(c) {
-    // An executor function receives a cancel function as a parameter
-    axiosCancelRequest = c;
-  })
-};
-
 class LicenseService {
   static async loadProjectData() {
     let response;
 
     try {
-      response = await axios.get(`${REST_URL}?q=type:project&wt=json`, {
-        ...cancelToken
-      });
+      response = await axios.get(`${REST_URL}?q=type:project&wt=json`);
 
       const { data } = response;
       const { numFound } = data.response;
 
       if (numFound !== null && numFound > 10) {
         response = await axios.get(
-          `${REST_URL}?q=type:project&rows=${numFound}&wt=json`,
-          {
-            ...cancelToken
-          }
+          `${REST_URL}?q=type:project&rows=${numFound}&wt=json`
         );
       }
     } catch (error) {
@@ -63,84 +49,12 @@ class LicenseService {
     return response;
   }
 
-  static async loadLicenseData(repo) {
-    let response;
-
-    try {
-      // TODO: Test using id:"${repo}"
-      response = await axios.get(
-        `${REST_URL}?q=id:"${repo}"&fl=license_*&wt=json`,
-        {
-          ...cancelToken
-        }
-      );
-
-      const { data } = response;
-      const { numFound } = data.response;
-
-      if (numFound !== null) {
-        response = await axios.get(
-          `${REST_URL}?q=id:"${repo}"&fl=license_*&rows=${numFound}&wt=json`,
-          {
-            ...cancelToken
-          }
-        );
-      }
-    } catch (error) {
-      Helpers.axiosHandleErrors(
-        'services → LicenseService.js → loadLicenseData()',
-        error
-      );
-
-      return error.response;
-    }
-
-    return response;
-  }
-
-  static async loadFileDetails(repo) {
-    let response;
-
-    try {
-      response = await axios.get(
-        `${REST_URL}?q=parent:"${repo}"&rows=5000&wt=json`,
-        {
-          ...cancelToken
-        }
-      );
-
-      // TODO ADD SOME IF (numFound) {...}
-
-      const { data } = response;
-      const { numFound } = data.response;
-
-      response = await axios.get(
-        `${REST_URL}?q=parent:"${repo}"&rows=${numFound}&wt=json`,
-        {
-          ...cancelToken
-        }
-      );
-    } catch (error) {
-      Helpers.axiosHandleErrors(
-        'services → LicenseService.js → loadFileDetails()',
-        error
-      );
-
-      return error.response;
-    }
-
-    return response;
-  }
-
   static async loadSoftwareData() {
     let response;
 
     try {
       response = await axios.get(
-        `${REST_URL}?q=type:software&fl=mime_*&wt=json`,
-        {
-          ...cancelToken
-        }
+        `${REST_URL}?q=type:software&fl=mime_*&wt=json`
       );
 
       const { data } = response;
@@ -148,10 +62,7 @@ class LicenseService {
 
       if (numFound !== null) {
         response = await axios.get(
-          `${REST_URL}?q=type:software&rows=${numFound}&fl=mime_*&wt=json`,
-          {
-            ...cancelToken
-          }
+          `${REST_URL}?q=type:software&rows=${numFound}&fl=mime_*&wt=json`
         );
       }
     } catch (error) {
@@ -171,10 +82,7 @@ class LicenseService {
 
     try {
       response = await axios.get(
-        `${REST_URL}?q=type:software&fl=license_*&wt=json`,
-        {
-          ...cancelToken
-        }
+        `${REST_URL}?q=type:software&fl=license_*&wt=json`
       );
 
       const { data } = response;
@@ -182,10 +90,7 @@ class LicenseService {
 
       if (numFound !== null) {
         response = await axios.get(
-          `${REST_URL}?q=type:software&rows=${numFound}&fl=license_*&wt=json`,
-          {
-            ...cancelToken
-          }
+          `${REST_URL}?q=type:software&rows=${numFound}&fl=license_*&wt=json`
         );
       }
     } catch (error) {
@@ -198,12 +103,6 @@ class LicenseService {
     }
 
     return response;
-  }
-
-  static cancelRequest() {
-    // Cancel the axios request
-    // Reference: https://github.com/axios/axios#cancellation
-    axiosCancelRequest();
   }
 }
 

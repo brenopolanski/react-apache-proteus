@@ -33,8 +33,6 @@ import { Loading, TitleBar } from '../../UI';
 import './TopMimeTypesChart.css';
 
 class TopMimeTypesChart extends Component {
-  _isMounted = false;
-
   state = {
     docs: [],
     count: 10,
@@ -44,7 +42,6 @@ class TopMimeTypesChart extends Component {
   };
 
   componentDidMount() {
-    this._isMounted = true;
     this.callApiLoadSoftwareData();
   }
 
@@ -66,12 +63,6 @@ class TopMimeTypesChart extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-    this.d3Chart.innerHTML = '';
-    LicenseService.cancelRequest();
-  }
-
   callApiLoadSoftwareData = () => {
     this.setState({
       loading: true,
@@ -80,7 +71,7 @@ class TopMimeTypesChart extends Component {
 
     LicenseService.loadSoftwareData()
       .then(res => {
-        if (this._isMounted && res.status === 200) {
+        if (res.status === 200) {
           const { count } = this.state;
           const { data } = res;
           const { docs } = data.response;
@@ -95,12 +86,10 @@ class TopMimeTypesChart extends Component {
         }
       })
       .catch(error => {
-        if (this._isMounted) {
-          this.setState({
-            loading: false,
-            error: true
-          });
-        }
+        this.setState({
+          loading: false,
+          error: true
+        });
       });
   };
 
@@ -233,8 +222,8 @@ class TopMimeTypesChart extends Component {
     const count = Number(this.state.count);
     let newCount = type === 'minus' ? count - 1 : count + 1;
 
-    if (newCount < 0) {
-      newCount = 0;
+    if (newCount <= 0) {
+      newCount = 1;
     } else if (newCount > 50) {
       newCount = 25;
     }
@@ -246,13 +235,17 @@ class TopMimeTypesChart extends Component {
     const { value } = event.target;
     let newCount = value;
 
-    if (value < 0) {
-      newCount = 0;
-    } else if (value > 50) {
-      newCount = 25;
-    }
+    if (value === '') {
+      this.setState({ count: '' });
+    } else {
+      if (value <= 0) {
+        newCount = 1;
+      } else if (value > 50) {
+        newCount = 25;
+      }
 
-    this.setState({ count: Math.round(newCount) });
+      this.setState({ count: Math.round(newCount) });
+    }
   };
 
   renderError() {
@@ -314,7 +307,7 @@ class TopMimeTypesChart extends Component {
 
   render() {
     const { loading, error } = this.state;
-    const contentStyle = !loading ? { height: 682 } : undefined;
+    const contentStyle = !loading && !error ? { height: 682 } : undefined;
 
     return (
       <Content style={contentStyle}>

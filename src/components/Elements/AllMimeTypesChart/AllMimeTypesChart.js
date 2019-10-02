@@ -33,8 +33,6 @@ import { Loading, TitleBar } from '../../UI';
 import './AllMimeTypesChart.css';
 
 class AllMimeTypesChart extends Component {
-  _isMounted = false;
-
   state = {
     docs: [],
     loading: true,
@@ -43,7 +41,6 @@ class AllMimeTypesChart extends Component {
   };
 
   componentDidMount() {
-    this._isMounted = true;
     this.callApiLoadSoftwareData();
   }
 
@@ -55,12 +52,6 @@ class AllMimeTypesChart extends Component {
     );
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-    this.d3Chart.innerHTML = '';
-    LicenseService.cancelRequest();
-  }
-
   callApiLoadSoftwareData = () => {
     this.setState({
       loading: true,
@@ -69,7 +60,7 @@ class AllMimeTypesChart extends Component {
 
     LicenseService.loadSoftwareData()
       .then(res => {
-        if (this._isMounted && res.status === 200) {
+        if (res.status === 200) {
           const { data } = res;
           const { docs } = data.response;
 
@@ -83,12 +74,10 @@ class AllMimeTypesChart extends Component {
         }
       })
       .catch(error => {
-        if (this._isMounted) {
-          this.setState({
-            loading: false,
-            error: true
-          });
-        }
+        this.setState({
+          loading: false,
+          error: true
+        });
       });
   };
 

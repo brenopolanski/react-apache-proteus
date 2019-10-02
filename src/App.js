@@ -20,6 +20,9 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 // Routes
 import { routes } from './routes';
 
+// Layout
+import Container from './components/Layout/Container';
+
 // Styles
 import 'antd/dist/antd.css';
 import './styles/app.css';
@@ -54,14 +57,16 @@ class App extends Component {
     return (
       <Router>
         <Switch>
-          {routes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              component={route.component}
-              exact={route.exact}
-            />
-          ))}
+          <Container>
+            {routes.map((route, index) => (
+              <Route
+                key={index}
+                path={route.path}
+                component={route.component}
+                exact={route.exact}
+              />
+            ))}
+          </Container>
         </Switch>
       </Router>
     );

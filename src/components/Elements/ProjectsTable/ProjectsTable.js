@@ -29,8 +29,6 @@ import Content from '../../Layout/Content';
 import { TableRowSkeleton, TitleBar } from '../../UI';
 
 class ProjectsTable extends Component {
-  _isMounted = false;
-
   state = {
     docs: [],
     searchText: '',
@@ -40,7 +38,6 @@ class ProjectsTable extends Component {
   };
 
   componentDidMount() {
-    this._isMounted = true;
     this.callApiLoadProjectData();
   }
 
@@ -53,11 +50,6 @@ class ProjectsTable extends Component {
     );
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-    LicenseService.cancelRequest();
-  }
-
   callApiLoadProjectData = () => {
     this.setState({
       loading: true,
@@ -66,7 +58,7 @@ class ProjectsTable extends Component {
 
     LicenseService.loadProjectData()
       .then(res => {
-        if (this._isMounted && res.status === 200) {
+        if (res.status === 200) {
           const { data } = res;
           const { docs } = data.response;
 
@@ -89,12 +81,10 @@ class ProjectsTable extends Component {
         }
       })
       .catch(error => {
-        if (this._isMounted) {
-          this.setState({
-            loading: false,
-            error: true
-          });
-        }
+        this.setState({
+          loading: false,
+          error: true
+        });
       });
   };
 

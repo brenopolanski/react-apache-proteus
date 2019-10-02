@@ -29,7 +29,7 @@ const Content = props => {
 };
 
 Content.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node
 };
 
 export default Content;

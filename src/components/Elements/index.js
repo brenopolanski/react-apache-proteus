@@ -15,6 +15,7 @@
 
 // Elements
 import AllMimeTypesChart from './AllMimeTypesChart';
+import AuditSummary from './AuditSummary';
 import Footer from './Footer';
 import LicenseTypesChart from './LicenseTypesChart';
 import ProjectsTable from './ProjectsTable';
@@ -24,6 +25,7 @@ import TopMimeTypesChart from './TopMimeTypesChart';
 
 export {
   AllMimeTypesChart,
+  AuditSummary,
   Footer,
   LicenseTypesChart,
   ProjectsTable,
