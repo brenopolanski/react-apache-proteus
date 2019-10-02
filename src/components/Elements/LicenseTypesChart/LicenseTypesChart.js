@@ -72,8 +72,6 @@ class LicenseTypesChart extends Component {
           const { data } = res;
           const { docs } = data.response;
 
-          console.log(docs);
-
           this.setState({ docs, loading: false });
           this.drawChart(docs);
         } else {
@@ -197,7 +195,7 @@ class LicenseTypesChart extends Component {
       .data(pie(result))
       .enter()
       .append('g')
-      .attr('transform', (d, i) => `translate(0,${(i + 1) * 20})`);
+      .attr('transform', (d, i) => `translate(0, ${(i + 1) * 20})`);
 
     legend
       .append('rect')
