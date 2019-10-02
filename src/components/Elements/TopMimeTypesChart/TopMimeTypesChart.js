@@ -29,11 +29,15 @@ import Content from '../../Layout/Content';
 // UI
 import { Loading, TitleBar } from '../../UI';
 
+// Styles
+import './TopMimeTypesChart.css';
+
 class TopMimeTypesChart extends Component {
   _isMounted = false;
 
   state = {
     docs: [],
+    count: 10,
     loading: true,
     error: false,
     errorMsg: 'Error fetching data'
@@ -47,6 +51,7 @@ class TopMimeTypesChart extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return (
       !isEqual(this.state.docs, nextState.docs) ||
+      !isEqual(this.state.count, nextState.count) ||
       !isEqual(this.state.loading, nextState.loading) ||
       !isEqual(this.state.error, nextState.error)
     );
@@ -91,54 +96,63 @@ class TopMimeTypesChart extends Component {
   };
 
   drawChart = docs => {
+    let { count } = this.state;
     const diameter = 420;
-    const rows = 10;
-    const resultingData = [];
-    const result = [];
-    const mime = {};
-
-    for (var i = 0; i < docs.length; i++) {
-      const doc = docs[i];
-      for (var x in doc) {
-        const key = x.split('mime_')[1];
-        const value = doc[x];
-        if (typeof mime[key] === 'undefined') {
-          mime[key] = value;
-        } else {
-          mime[key] += value;
-        }
-      }
-    }
-
-    for (x in mime) {
-      const jsonObject = {};
-      jsonObject['key'] = x;
-      jsonObject['y'] = mime[x];
-      resultingData.push(jsonObject);
-    }
-
-    resultingData.sort((a, b) => b.y - a.y);
-    if (rows > resultingData.length) rows = resultingData.length;
-    for (i = 1; i <= rows; i++) {
-      result[i - 1] = resultingData[i - 1];
-    }
-
-    console.log(result);
-
     const svg = d3
       .select(this.d3Chart)
       .append('svg')
       .attr('width', diameter)
-      .attr('height', diameter);
-    svg.selectAll('*').remove();
+      .attr('height', diameter)
+      .attr('class', 'proteus-pie-chart');
     const width = +svg.attr('width');
     const height = +svg.attr('height');
     const radius = Math.min(width, height) / 4;
     const pieposx = width / 2 + 90;
     const pieposy = height / 2 - 140;
+    const resultingData = [];
+    const result = [];
+    const mime = {};
+
+    docs.forEach(doc => {
+      for (const d in doc) {
+        if (doc.hasOwnProperty(d)) {
+          const key = d.split('mime_')[1];
+          const value = doc[d];
+
+          if (typeof mime[key] === 'undefined') {
+            mime[key] = value;
+          } else {
+            mime[key] += value;
+          }
+        }
+      }
+    });
+
+    for (const m in mime) {
+      if (mime.hasOwnProperty(m)) {
+        const jsonObject = {};
+
+        jsonObject['key'] = m;
+        jsonObject['y'] = mime[m];
+        resultingData.push(jsonObject);
+      }
+    }
+
+    resultingData.sort((a, b) => b.y - a.y);
+
+    if (count > resultingData.length) {
+      count = resultingData.length;
+    }
+
+    for (let i = 1; i <= count; i++) {
+      result[i - 1] = resultingData[i - 1];
+    }
+
+    svg.selectAll('*').remove();
+
     const g = svg
       .append('g')
-      .attr('transform', `translate(${pieposx},${pieposy})`);
+      .attr('transform', `translate(${pieposx}, ${pieposy})`);
 
     const color = d3.scaleOrdinal(d3.schemePiYG[11]);
 
@@ -156,6 +170,7 @@ class TopMimeTypesChart extends Component {
       .arc()
       .outerRadius(radius - 40)
       .innerRadius(radius - 40);
+
     const arc = g
       .selectAll('.arc')
       .data(pie(result))
@@ -184,12 +199,12 @@ class TopMimeTypesChart extends Component {
     const legend = d3
       .select(this.d3Chart)
       .append('svg')
-      .attr('class', 'legend')
+      .attr('class', 'proteus-legend-chart')
       .selectAll('g')
       .data(pie(result))
       .enter()
       .append('g')
-      .attr('transform', (d, i) => `translate(0,${(i + 1) * 20})`);
+      .attr('transform', (d, i) => `translate(0, ${(i + 1) * 20})`);
 
     legend
       .append('rect')
@@ -201,7 +216,7 @@ class TopMimeTypesChart extends Component {
       .append('text')
       .attr('x', 24)
       .attr('y', 9)
-      .attr('dy', '.35em')
+      .attr('dy', '0.35em')
       .text(({ data }) => data.key);
   };
 
