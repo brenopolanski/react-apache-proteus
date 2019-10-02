@@ -107,8 +107,8 @@ class TopMimeTypesChart extends Component {
     const width = +svg.attr('width');
     const height = +svg.attr('height');
     const radius = Math.min(width, height) / 4;
-    const pieposx = width / 2 + 90;
-    const pieposy = height / 2 - 140;
+    const piePosX = width / 2 - 50;
+    const piePosY = height / 2 - 90;
     const resultingData = [];
     const result = [];
     const mime = {};
@@ -152,7 +152,7 @@ class TopMimeTypesChart extends Component {
 
     const g = svg
       .append('g')
-      .attr('transform', `translate(${pieposx}, ${pieposy})`);
+      .attr('transform', `translate(${piePosX}, ${piePosY})`);
 
     const color = d3.scaleOrdinal(d3.schemePiYG[11]);
 
@@ -254,7 +254,7 @@ class TopMimeTypesChart extends Component {
     const { loading, error } = this.state;
 
     return (
-      <Content>
+      <Content style={{ height: 682 }}>
         <TitleBar title="Top MIME Types" />
         {!loading ? (
           !error ? (

@@ -22,9 +22,9 @@ import { Logo } from '../';
 // Styles
 import './Loading.css';
 
-const Loading = ({ style }) => {
+const Loading = props => {
   return (
-    <div className="proteus-loading" style={style}>
+    <div className="proteus-loading" {...props}>
       <div className="proteus-loading-logo">
         <Logo width={50} height={50} />
       </div>

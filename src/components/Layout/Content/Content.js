@@ -21,7 +21,11 @@ import PropTypes from 'prop-types';
 import './Content.css';
 
 const Content = props => {
-  return <div className="proteus-layout-content">{props.children}</div>;
+  return (
+    <div className="proteus-layout-content" {...props}>
+      {props.children}
+    </div>
+  );
 };
 
 Content.propTypes = {

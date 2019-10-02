@@ -13,8 +13,7 @@
 
 .proteus-top-mime-types-chart {
   display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
+  flex-direction: row-reverse;
 
   .proteus-pie-chart {
     .arc text {
@@ -26,9 +25,5 @@
     .arc path {
       stroke: transparent;
     }
-  }
-
-  .proteus-legend-chart {
-    width: 100%;
   }
 }
