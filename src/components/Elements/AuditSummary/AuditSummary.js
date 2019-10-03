@@ -78,19 +78,19 @@ class AuditSummary extends Component {
   };
 
   drawChart = docs => {
-    var label_names = [];
-    var Standards = [];
-    var Apache = [];
-    var Binaries = [];
-    var Generated = [];
-    var Unknown = [];
-    var Archives = [];
-    var Notes = [];
+    const label_names = [];
+    const Standards = [];
+    const Apache = [];
+    const Binaries = [];
+    const Generated = [];
+    const Unknown = [];
+    const Archives = [];
+    const Notes = [];
 
     for (var i = 0; i < docs.length; i++) {
-      var doc = docs[i];
-      var repo = doc.id.split('/');
-      var reponame = repo[repo.length - 1];
+      const doc = docs[i];
+      const repo = doc.id.split('/');
+      let reponame = repo[repo.length - 1];
       if (reponame.indexOf('part') === 0) reponame = repo[repo.length - 2];
 
       if (label_names[label_names.length - 1] === reponame) {
@@ -114,7 +114,7 @@ class AuditSummary extends Component {
       Notes.push(doc['license_Notes']);
     }
 
-    var data = {
+    const data = {
       labels: label_names,
       series: [
         {
@@ -148,24 +148,24 @@ class AuditSummary extends Component {
       ]
     };
 
-    var chartWidth = 600,
-      barHeight = 25,
-      groupHeight = barHeight * data.series.length,
-      gapBetweenGroups = 25,
-      spaceForLabels = 150,
-      spaceForLegend = 150;
+    const chartWidth = 600;
+    const barHeight = 25;
+    const groupHeight = barHeight * data.series.length;
+    const gapBetweenGroups = 25;
+    const spaceForLabels = 150;
+    const spaceForLegend = 150;
 
     // Zip the series data together (first values, second values, etc.)
-    var zippedData = [];
+    const zippedData = [];
     for (i = 0; i < data.labels.length; i++) {
-      for (var j = 0; j < data.series.length; j++) {
+      for (let j = 0; j < data.series.length; j++) {
         zippedData.push(data.series[j].values[i]);
       }
     }
 
     // Color scale
-    var color = d3.scaleOrdinal(d3.schemeAccent);
-    var mylabels = [
+    const color = d3.scaleOrdinal(d3.schemeAccent);
+    const mylabels = [
       'Standards',
       'Apache',
       'Binaries',
@@ -174,61 +174,51 @@ class AuditSummary extends Component {
       'Archives',
       'Notes'
     ];
-    var chartHeight =
+    const chartHeight =
       barHeight * zippedData.length + gapBetweenGroups * data.labels.length;
 
-    var x = d3
+    const x = d3
       .scaleLinear()
       .domain([0, d3.max(zippedData)])
       .range([0, chartWidth]);
 
-    var y = d3.scaleLinear().range([chartHeight + gapBetweenGroups, 0]);
-
-    var yAxis = d3
+    const yAxis = d3
       .axisLeft(x)
       .tickFormat('')
       .tickSize(0);
 
     // Specify the chart area and dimensions
-    var chart = d3
+    const chart = d3
       .select(this.d3Chart)
       .append('svg')
       .attr('width', spaceForLabels + chartWidth + spaceForLegend)
       .attr('height', chartHeight);
 
     // Create bars
-    var bar = chart
+    const bar = chart
       .selectAll('g')
       .data(zippedData)
       .enter()
       .append('g')
-      .attr('transform', function(d, i) {
-        return (
-          'translate(' +
-          spaceForLabels +
-          ',' +
-          (i * barHeight +
-            gapBetweenGroups * (0.5 + Math.floor(i / data.series.length))) +
-          ')'
-        );
-      });
+      .attr(
+        'transform',
+        (d, i) =>
+          `translate(${spaceForLabels},${i * barHeight +
+            gapBetweenGroups * (0.5 + Math.floor(i / data.series.length))})`
+      );
 
     // Create rectangles of the correct width
     bar
       .append('rect')
-      .attr('style', function(d, i) {
-        return 'fill:' + color(i % data.series.length);
-      })
+      .attr('style', (d, i) => `fill:${color(i % data.series.length)}`)
       .attr('class', 'bar')
-      .attr('width', function(x) {
-        return x > 0 ? x : 0;
-      })
+      .attr('width', x => (x > 0 ? x : 0))
       .attr('height', barHeight - 1);
 
     bar
       .append('rect')
-      .attr('x', function(d) {
-        var xtoreturn = x(d);
+      .attr('x', d => {
+        let xtoreturn = x(d);
         if (x(d) < 10) xtoreturn = x(d) + 10;
         else if (x(d) < 75) xtoreturn = x(d) - 77;
         else xtoreturn = x(d) - 83;
@@ -243,28 +233,24 @@ class AuditSummary extends Component {
     // Add text label in bar
     bar
       .append('text')
-      .attr('x', function(d) {
-        var xtoreturn = x(d);
+      .attr('x', d => {
+        let xtoreturn = x(d);
         if (x(d) < 80) xtoreturn = 5;
         else xtoreturn = x(d) - 63;
         if (xtoreturn < 0) return 0;
         else return xtoreturn;
       })
       .attr('y', barHeight / 2 + 1.5)
-      .attr('style', function(d, i) {
-        return 'fill:' + color(i % data.series.length);
-      })
+      .attr('style', (d, i) => `fill:${color(i % data.series.length)}`)
       .attr('style', 'font-size:.55em')
-      .text(function(d, i) {
-        return d + ' ' + mylabels[i % data.series.length];
-      });
+      .text((d, i) => `${d} ${mylabels[i % data.series.length]}`);
 
     // Draw labels
     bar
       .append('text')
       .attr('class', 'label')
-      .attr('x', function(d, i) {
-        var x = -groupHeight / 2;
+      .attr('x', (d, i) => {
+        let x = -groupHeight / 2;
         if (i % data.series.length === 0)
           x -= data.labels[Math.floor(i / data.series.length)].length * 3;
         return x;
@@ -272,7 +258,7 @@ class AuditSummary extends Component {
       .attr('y', -20)
       .attr('dy', '.35em')
       .attr('transform', 'rotate(-90)')
-      .text(function(d, i) {
+      .text((d, i) => {
         if (i % data.series.length === 0)
           return data.labels[Math.floor(i / data.series.length)];
         else return '';
@@ -283,46 +269,40 @@ class AuditSummary extends Component {
       .attr('class', 'y axis')
       .attr(
         'transform',
-        'translate(' + spaceForLabels + ', ' + -gapBetweenGroups / 2 + ')'
+        `translate(${spaceForLabels}, ${-gapBetweenGroups / 2})`
       )
       .call(yAxis);
 
     // Draw legend
-    var legendRectSize = 18,
-      legendSpacing = 4;
+    const legendRectSize = 18;
 
-    var legend = chart
+    const legendSpacing = 4;
+
+    const legend = chart
       .selectAll('.legend')
       .data(data.series)
       .enter()
       .append('g')
-      .attr('transform', function(d, i) {
-        var height = legendRectSize + legendSpacing;
-        var offset = -gapBetweenGroups / 2;
-        var horz = spaceForLabels + chartWidth + 40 - legendRectSize;
-        var vert = i * height - offset;
-        return 'translate(' + 0 + ',' + vert + ')';
+      .attr('transform', (d, i) => {
+        const height = legendRectSize + legendSpacing;
+        const offset = -gapBetweenGroups / 2;
+        const vert = i * height - offset;
+        return `translate(${0},${vert})`;
       });
 
     legend
       .append('rect')
       .attr('width', legendRectSize)
       .attr('height', legendRectSize)
-      .style('fill', function(d, i) {
-        return color(i);
-      })
-      .style('stroke', function(d, i) {
-        return color(i);
-      });
+      .style('fill', (d, i) => color(i))
+      .style('stroke', (d, i) => color(i));
 
     legend
       .append('text')
       .attr('class', 'legend')
       .attr('x', legendRectSize + legendSpacing)
       .attr('y', legendRectSize - legendSpacing)
-      .text(function(d) {
-        return d.label;
-      });
+      .text(({ label }) => label);
   };
 
   renderError() {
