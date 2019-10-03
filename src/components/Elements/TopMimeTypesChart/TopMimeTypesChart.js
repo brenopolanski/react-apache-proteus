@@ -16,7 +16,7 @@
 // Packages
 import React, { Component, Fragment } from 'react';
 import isEqual from 'react-fast-compare';
-import { Button, Input, Result } from 'antd';
+import { Button, Empty, Input, Result } from 'antd';
 import * as d3 from 'd3';
 import tinycolor from 'tinycolor2';
 
@@ -57,7 +57,9 @@ class TopMimeTypesChart extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { docs, count } = this.state;
 
-    if (prevState.count !== count) {
+    if (count === '') {
+      this.d3Chart.innerHTML = '';
+    } else if (prevState.count !== count) {
       this.d3Chart.innerHTML = '';
       this.drawChart(docs, count);
     }
@@ -301,6 +303,7 @@ class TopMimeTypesChart extends Component {
           className="proteus-top-mime-types-chart"
           ref={node => (this.d3Chart = node)}
         />
+        {count === '' && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
       </Fragment>
     );
   }

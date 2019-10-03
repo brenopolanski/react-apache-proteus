@@ -77,6 +77,34 @@ class LicenseService {
     return response;
   }
 
+  static async loadSoftwareLicenseData() {
+    let response;
+
+    try {
+      response = await axios.get(
+        `${REST_URL}?q=type:software&fl=license_*,id&sort=id+asc&wt=json`
+      );
+
+      const { data } = response;
+      const { numFound } = data.response;
+
+      if (numFound !== null) {
+        response = await axios.get(
+          `${REST_URL}?q=type:software&rows=${numFound}&fl=license_*,id&sort=id+asc&wt=json`
+        );
+      }
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → LicenseService.js → loadSoftwareLicenseData()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
   static async loadLicenseTypesData() {
     let response;
 
