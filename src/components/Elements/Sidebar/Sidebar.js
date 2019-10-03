@@ -30,8 +30,24 @@ const { Sider } = Layout;
 const { Item } = Menu;
 
 class Sidebar extends PureComponent {
+  state = {
+    selectedMenuItem: 'summaryMenu'
+  };
+
+  componentWillMount() {
+    const { location } = this.props;
+
+    if (location.pathname === '/') {
+      this.setState({ selectedMenuItem: 'summaryMenu' });
+    } else {
+      this.setState({ selectedMenuItem: 'auditMenu' });
+    }
+  }
+
   handleClickMenu = ({ item, key }) => {
     const { history } = this.props;
+
+    this.setState({ selectedMenuItem: key });
 
     if (key === 'summaryMenu') {
       history.push('/');
@@ -42,6 +58,7 @@ class Sidebar extends PureComponent {
 
   render() {
     const { collapsed, onCollapse } = this.props;
+    const { selectedMenuItem } = this.state;
 
     return (
       <Sider
@@ -57,7 +74,7 @@ class Sidebar extends PureComponent {
         )}
         <Menu
           theme="dark"
-          defaultSelectedKeys={['summaryMenu']}
+          selectedKeys={[selectedMenuItem]}
           mode="inline"
           onClick={this.handleClickMenu}
         >

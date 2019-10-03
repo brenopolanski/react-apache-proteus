@@ -78,76 +78,78 @@ class AuditSummary extends Component {
   };
 
   drawChart = docs => {
-    const label_names = [];
-    const Standards = [];
-    const Apache = [];
-    const Binaries = [];
-    const Generated = [];
-    const Unknown = [];
-    const Archives = [];
-    const Notes = [];
+    const labelNames = [];
+    const standards = [];
+    const apache = [];
+    const binaries = [];
+    const generated = [];
+    const unknown = [];
+    const archives = [];
+    const notes = [];
 
-    for (var i = 0; i < docs.length; i++) {
+    for (let i = 0, len = docs.length; i < len; i++) {
       const doc = docs[i];
       const repo = doc.id.split('/');
       let reponame = repo[repo.length - 1];
-      if (reponame.indexOf('part') === 0) reponame = repo[repo.length - 2];
 
-      if (label_names[label_names.length - 1] === reponame) {
-        Standards[Standards.length - 1] += doc['license_Standards'];
-        Apache[Apache.length - 1] += doc['license_Apache'];
-        Binaries[Binaries.length - 1] += doc['license_Binaries'];
-        Generated[Generated.length - 1] += doc['license_Generated'];
-        Unknown[Unknown.length - 1] += doc['license_Unknown'];
-        Archives[Archives.length - 1] += doc['license_Archives'];
-        Notes[Notes.length - 1] += doc['license_Notes'];
+      if (reponame.indexOf('part') === 0) {
+        reponame = repo[repo.length - 2];
+      }
+
+      if (labelNames[labelNames.length - 1] === reponame) {
+        standards[standards.length - 1] += doc['license_Standards'];
+        apache[apache.length - 1] += doc['license_Apache'];
+        binaries[binaries.length - 1] += doc['license_Binaries'];
+        generated[generated.length - 1] += doc['license_Generated'];
+        unknown[unknown.length - 1] += doc['license_Unknown'];
+        archives[archives.length - 1] += doc['license_Archives'];
+        notes[notes.length - 1] += doc['license_Notes'];
         continue;
       }
 
-      label_names.push(reponame);
-      Standards.push(doc['license_Standards']);
-      Apache.push(doc['license_Apache']);
-      Binaries.push(doc['license_Binaries']);
-      Generated.push(doc['license_Generated']);
-      Unknown.push(doc['license_Unknown']);
-      Archives.push(doc['license_Archives']);
-      Notes.push(doc['license_Notes']);
+      labelNames.push(reponame);
+      standards.push(doc['license_Standards']);
+      apache.push(doc['license_Apache']);
+      binaries.push(doc['license_Binaries']);
+      generated.push(doc['license_Generated']);
+      unknown.push(doc['license_Unknown']);
+      archives.push(doc['license_Archives']);
+      notes.push(doc['license_Notes']);
     }
 
     const data = {
-      labels: label_names,
+      labels: labelNames,
       series: [
         {
           label: 'Standards',
-          values: Standards
+          values: standards
         },
         {
           label: 'Apache',
-          values: Apache
+          values: apache
         },
         {
           label: 'Binaries',
-          values: Binaries
+          values: binaries
         },
         {
           label: 'Generated',
-          values: Generated
+          values: generated
         },
         {
           label: 'Unknown',
-          values: Unknown
+          values: unknown
         },
         {
           label: 'Archives',
-          values: Archives
+          values: archives
         },
         {
           label: 'Notes',
-          values: Notes
+          values: notes
         }
       ]
     };
-
     const chartWidth = 600;
     const barHeight = 25;
     const groupHeight = barHeight * data.series.length;
@@ -157,8 +159,9 @@ class AuditSummary extends Component {
 
     // Zip the series data together (first values, second values, etc.)
     const zippedData = [];
-    for (i = 0; i < data.labels.length; i++) {
-      for (let j = 0; j < data.series.length; j++) {
+
+    for (let i = 0, iLen = data.labels.length; i < iLen; i++) {
+      for (let j = 0, jLen = data.series.length; j < jLen; j++) {
         zippedData.push(data.series[j].values[i]);
       }
     }
@@ -203,7 +206,7 @@ class AuditSummary extends Component {
       .attr(
         'transform',
         (d, i) =>
-          `translate(${spaceForLabels},${i * barHeight +
+          `translate(${spaceForLabels}, ${i * barHeight +
             gapBetweenGroups * (0.5 + Math.floor(i / data.series.length))})`
       );
 
@@ -219,11 +222,20 @@ class AuditSummary extends Component {
       .append('rect')
       .attr('x', d => {
         let xtoreturn = x(d);
-        if (x(d) < 10) xtoreturn = x(d) + 10;
-        else if (x(d) < 75) xtoreturn = x(d) - 77;
-        else xtoreturn = x(d) - 83;
-        if (xtoreturn < 0) return 0;
-        else return xtoreturn;
+
+        if (x(d) < 10) {
+          xtoreturn = x(d) + 10;
+        } else if (x(d) < 75) {
+          xtoreturn = x(d) - 77;
+        } else {
+          xtoreturn = x(d) - 83;
+        }
+
+        if (xtoreturn < 0) {
+          return 0;
+        } else {
+          return xtoreturn;
+        }
       })
       .attr('y', 7)
       .attr('width', 80)
@@ -235,10 +247,18 @@ class AuditSummary extends Component {
       .append('text')
       .attr('x', d => {
         let xtoreturn = x(d);
-        if (x(d) < 80) xtoreturn = 5;
-        else xtoreturn = x(d) - 63;
-        if (xtoreturn < 0) return 0;
-        else return xtoreturn;
+
+        if (x(d) < 80) {
+          xtoreturn = 5;
+        } else {
+          xtoreturn = x(d) - 63;
+        }
+
+        if (xtoreturn < 0) {
+          return 0;
+        } else {
+          return xtoreturn;
+        }
       })
       .attr('y', barHeight / 2 + 1.5)
       .attr('style', (d, i) => `fill:${color(i % data.series.length)}`)
@@ -251,17 +271,22 @@ class AuditSummary extends Component {
       .attr('class', 'label')
       .attr('x', (d, i) => {
         let x = -groupHeight / 2;
-        if (i % data.series.length === 0)
+
+        if (i % data.series.length === 0) {
           x -= data.labels[Math.floor(i / data.series.length)].length * 3;
+        }
+
         return x;
       })
       .attr('y', -20)
       .attr('dy', '.35em')
       .attr('transform', 'rotate(-90)')
       .text((d, i) => {
-        if (i % data.series.length === 0)
+        if (i % data.series.length === 0) {
           return data.labels[Math.floor(i / data.series.length)];
-        else return '';
+        } else {
+          return '';
+        }
       });
 
     chart
@@ -275,9 +300,7 @@ class AuditSummary extends Component {
 
     // Draw legend
     const legendRectSize = 18;
-
     const legendSpacing = 4;
-
     const legend = chart
       .selectAll('.legend')
       .data(data.series)
@@ -287,7 +310,7 @@ class AuditSummary extends Component {
         const height = legendRectSize + legendSpacing;
         const offset = -gapBetweenGroups / 2;
         const vert = i * height - offset;
-        return `translate(${0},${vert})`;
+        return `translate(${0}, ${vert})`;
       });
 
     legend
@@ -317,7 +340,7 @@ class AuditSummary extends Component {
           <Button
             icon="sync"
             type="danger"
-            onClick={this.callApiLoadLicenseTypesData}
+            onClick={this.callApiLoadSoftwareLicenseData}
           >
             Refresh
           </Button>

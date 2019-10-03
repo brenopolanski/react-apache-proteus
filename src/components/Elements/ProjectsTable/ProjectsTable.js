@@ -62,8 +62,6 @@ class ProjectsTable extends Component {
           const { data } = res;
           const { docs } = data.response;
 
-          console.log(docs);
-
           this.setState({
             docs: docs.map(doc => {
               return {
