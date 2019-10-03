@@ -33,6 +33,8 @@ import { Loading, TitleBar } from '../../UI';
 import './TopMimeTypesChart.css';
 
 class TopMimeTypesChart extends Component {
+  _isMounted = false;
+
   state = {
     docs: [],
     count: 10,
@@ -42,6 +44,7 @@ class TopMimeTypesChart extends Component {
   };
 
   componentDidMount() {
+    this._isMounted = true;
     this.callApiLoadSoftwareData();
   }
 
@@ -65,6 +68,10 @@ class TopMimeTypesChart extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   callApiLoadSoftwareData = () => {
     this.setState({
       loading: true,
@@ -73,7 +80,7 @@ class TopMimeTypesChart extends Component {
 
     LicenseService.loadSoftwareData()
       .then(res => {
-        if (res.status === 200) {
+        if (this._isMounted && res.status === 200) {
           const { count } = this.state;
           const { data } = res;
           const { docs } = data.response;
@@ -81,17 +88,21 @@ class TopMimeTypesChart extends Component {
           this.setState({ docs, loading: false });
           this.drawChart(docs, count);
         } else {
+          if (this._isMounted) {
+            this.setState({
+              loading: false,
+              error: true
+            });
+          }
+        }
+      })
+      .catch(error => {
+        if (this._isMounted) {
           this.setState({
             loading: false,
             error: true
           });
         }
-      })
-      .catch(error => {
-        this.setState({
-          loading: false,
-          error: true
-        });
       });
   };
 

@@ -29,6 +29,8 @@ import Content from '../../Layout/Content';
 import { Loading, TitleBar } from '../../UI';
 
 class AuditSummary extends Component {
+  _isMounted = false;
+
   state = {
     docs: [],
     loading: true,
@@ -37,6 +39,7 @@ class AuditSummary extends Component {
   };
 
   componentDidMount() {
+    this._isMounted = true;
     this.callApiLoadSoftwareLicenseData();
   }
 
@@ -48,6 +51,10 @@ class AuditSummary extends Component {
     );
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   callApiLoadSoftwareLicenseData = () => {
     this.setState({
       loading: true,
@@ -56,24 +63,28 @@ class AuditSummary extends Component {
 
     LicenseService.loadSoftwareLicenseData()
       .then(res => {
-        if (res.status === 200) {
+        if (this._isMounted && res.status === 200) {
           const { data } = res;
           const { docs } = data.response;
 
           this.setState({ docs, loading: false });
           this.drawChart(docs);
         } else {
+          if (this._isMounted) {
+            this.setState({
+              loading: false,
+              error: true
+            });
+          }
+        }
+      })
+      .catch(error => {
+        if (this._isMounted) {
           this.setState({
             loading: false,
             error: true
           });
         }
-      })
-      .catch(error => {
-        this.setState({
-          loading: false,
-          error: true
-        });
       });
   };
 
