@@ -14,9 +14,10 @@
  */
 
 // Packages
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import isEqual from 'react-fast-compare';
-import { Button, Icon, Input, Result, Table } from 'antd';
+import { Button, Descriptions, Drawer, Icon, Input, Result, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 
 // Services
@@ -28,20 +29,25 @@ import Content from '../../Layout/Content';
 // UI
 import { TableRowSkeleton, TitleBar } from '../../UI';
 
-// Root
-import ProjectDetails from './ProjectDetails';
-
 // Utils
 import Helpers from '../../../utils/Helpers';
 
-class ProjectsTable extends Component {
+// Styles
+import './ProjectDetails.css';
+
+// Components
+const { Item } = Descriptions;
+
+// Constants
+const ITEM_SPAN = 3;
+
+class ProjectDetails extends Component {
   _isMounted = false;
 
   state = {
-    docs: [],
-    selectedItem: {},
+    licenseDocs: {},
+    fileDocs: [],
     searchText: '',
-    isShowProjectDetails: false,
     loading: true,
     error: false,
     errorMsg: 'Error fetching data'
@@ -49,14 +55,14 @@ class ProjectsTable extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    this.callApiLoadProjectData();
+    this.callApiLoadFileDetails();
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return (
-      !isEqual(this.state.docs, nextState.docs) ||
+      !isEqual(this.state.licenseDocs, nextState.licenseDocs) ||
+      !isEqual(this.state.fileDocs, nextState.fileDocs) ||
       this.state.searchText !== nextState.searchText ||
-      this.state.isShowProjectDetails !== nextState.isShowProjectDetails ||
       this.state.loading !== nextState.loading ||
       this.state.error !== nextState.error
     );
@@ -66,20 +72,22 @@ class ProjectsTable extends Component {
     this._isMounted = false;
   }
 
-  callApiLoadProjectData = () => {
+  callApiLoadFileDetails = () => {
+    const { item } = this.props;
+
     this.setState({
       loading: true,
       error: false
     });
 
-    LicenseService.loadProjectData()
+    LicenseService.loadFileDetails(item.repo)
       .then(res => {
         if (this._isMounted && res.status === 200) {
           const { data } = res;
           const { docs } = data.response;
 
           this.setState({
-            docs: docs.map(doc => {
+            fileDocs: docs.map(doc => {
               return {
                 ...doc,
                 key: Helpers.uid(doc.id)
@@ -164,7 +172,7 @@ class ProjectsTable extends Component {
       <Highlighter
         highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
         searchWords={[this.state.searchText]}
-        textToHighlight={text.toString()}
+        textToHighlight={text ? text.toString() : ''}
         autoEscape
       />
     )
@@ -180,13 +188,6 @@ class ProjectsTable extends Component {
     this.setState({ searchText: '' });
   };
 
-  handleShowProjectDetails = item => {
-    this.setState(prevState => ({
-      selectedItem: item.repo ? item : {},
-      isShowProjectDetails: !prevState.isShowProjectDetails
-    }));
-  };
-
   renderError() {
     const { errorMsg } = this.state;
 
@@ -199,7 +200,7 @@ class ProjectsTable extends Component {
           <Button
             icon="sync"
             type="danger"
-            onClick={this.callApiLoadProjectData}
+            onClick={this.callApiLoadFileDetails}
           >
             Refresh
           </Button>
@@ -208,81 +209,149 @@ class ProjectsTable extends Component {
     );
   }
 
-  renderTable() {
-    const { docs } = this.state;
+  renderLicenseDetails() {
+    const { item } = this.props;
+    const { name, description, repo, loc_url } = item;
+
+    return (
+      <Content>
+        <TitleBar title="License Details" />
+        <Descriptions bordered>
+          <Item label="Project Name" span={ITEM_SPAN}>
+            {name}
+          </Item>
+          <Item label="Project Description" span={ITEM_SPAN}>
+            {description}
+          </Item>
+          <Item label="Project Repository" span={ITEM_SPAN}>
+            {repo}
+          </Item>
+          <Item label="Project Location" span={ITEM_SPAN}>
+            {loc_url}
+          </Item>
+        </Descriptions>
+      </Content>
+    );
+  }
+
+  renderFileDetails() {
+    const { fileDocs, loading, error } = this.state;
     const columns = [
       {
-        title: 'Repository',
-        dataIndex: 'repo',
-        key: 'repo',
-        width: 350,
-        sorter: (a, b) => a.repo.length - b.repo.length,
+        title: 'Location',
+        dataIndex: 'id',
+        key: 'id',
+        width: 450,
+        sorter: (a, b) => a.id.length - b.id.length,
         sortDirections: ['descend', 'ascend'],
-        ...this.getColumnSearchProps('repo', 'repository')
+        ...this.getColumnSearchProps('id', 'location')
       },
       {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-        width: 350,
-        sorter: (a, b) => a.name.length - b.name.length,
+        title: 'Mime Type',
+        dataIndex: 'mimetype',
+        key: 'mimetype',
+        width: 200,
+        sorter: (a, b) => a.mimetype.length - b.mimetype.length,
         sortDirections: ['descend', 'ascend'],
-        ...this.getColumnSearchProps('name')
+        ...this.getColumnSearchProps('mimetype', 'mime type')
       },
       {
-        title: 'Description',
-        dataIndex: 'description',
-        key: 'description',
-        width: 350,
-        sorter: (a, b) => a.description.length - b.description.length,
-        sortDirections: ['descend', 'ascend'],
-        ...this.getColumnSearchProps('description')
+        title: 'License',
+        dataIndex: 'license',
+        key: 'license',
+        filters: [
+          {
+            text: 'Standard',
+            value: 'Standard'
+          },
+          {
+            text: 'Unknown',
+            value: 'Unknown'
+          },
+          {
+            text: 'Apache',
+            value: 'Apache'
+          },
+          {
+            text: 'Binaries',
+            value: 'Binaries'
+          },
+          {
+            text: 'Generated',
+            value: 'Generated'
+          },
+          {
+            text: 'Notes',
+            value: 'Notes'
+          },
+          {
+            text: 'Archives',
+            value: 'Archives'
+          }
+        ],
+        width: 200,
+        onFilter: (value, record) => record.license.indexOf(value) === 0,
+        sorter: (a, b) => a.license.length - b.license.length,
+        sortDirections: ['descend', 'ascend']
       },
       {
-        title: 'Audit',
-        key: 'audit',
-        align: 'right',
-        render: (text, record) => (
-          <Button
-            type="primary"
-            icon="file-text"
-            onClick={this.handleShowProjectDetails.bind(this, record)}
-          />
-        )
+        title: 'Header',
+        dataIndex: 'header',
+        key: 'header',
+        sorter: (a, b) => a.header.length - b.header.length,
+        sortDirections: ['descend', 'ascend'],
+        ...this.getColumnSearchProps('header')
       }
     ];
 
-    return <Table scroll={{ y: 400 }} columns={columns} dataSource={docs} />;
+    return (
+      <Content>
+        <TitleBar title="File Details" />
+        {!loading ? (
+          !error ? (
+            <Table
+              scroll={{ y: 200 }}
+              columns={columns}
+              dataSource={fileDocs}
+            />
+          ) : (
+            this.renderErrorFileDocs()
+          )
+        ) : (
+          <TableRowSkeleton />
+        )}
+      </Content>
+    );
   }
 
   render() {
-    const { selectedItem, isShowProjectDetails, loading, error } = this.state;
+    const { visible, item, onClose } = this.props;
 
     return (
-      <Fragment>
-        <Content>
-          <TitleBar title="Projects" />
-          {!loading ? (
-            !error ? (
-              this.renderTable()
-            ) : (
-              this.renderError()
-            )
-          ) : (
-            <TableRowSkeleton />
-          )}
-        </Content>
-
-        {isShowProjectDetails && (
-          <ProjectDetails
-            visible={isShowProjectDetails}
-            item={selectedItem}
-            onClose={this.handleShowProjectDetails}
-          />
-        )}
-      </Fragment>
+      <Drawer
+        className="proteus-project-details"
+        title={item.name}
+        placement="bottom"
+        width="100%"
+        height="100%"
+        visible={visible}
+        onClose={onClose}
+      >
+        {this.renderLicenseDetails()}
+        {this.renderFileDetails()}
+      </Drawer>
     );
   }
 }
 
-export default ProjectsTable;
+ProjectDetails.propTypes = {
+  visible: PropTypes.bool,
+  item: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired
+};
+
+ProjectDetails.defaultProps = {
+  visible: false
+};
+
+export default ProjectDetails;

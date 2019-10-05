@@ -49,6 +49,62 @@ class LicenseService {
     return response;
   }
 
+  static async loadLicenseData(repo) {
+    let response;
+
+    try {
+      response = await axios.get(
+        `${REST_URL}?q=id:"${repo}"&fl=license_*&wt=json`
+      );
+
+      const { data } = response;
+      const { numFound } = data.response;
+
+      if (numFound !== null) {
+        response = await axios.get(
+          `${REST_URL}?q=id:"${repo}"&fl=license_*&rows=${numFound}&wt=json`
+        );
+      }
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → LicenseService.js → loadLicenseData()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
+  static async loadFileDetails(repo) {
+    let response;
+
+    try {
+      response = await axios.get(
+        `${REST_URL}?q=parent:"${repo}"&rows=5000&wt=json`
+      );
+
+      const { data } = response;
+      const { numFound } = data.response;
+
+      if (numFound !== null) {
+        response = await axios.get(
+          `${REST_URL}?q=parent:"${repo}"&rows=${numFound}&wt=json`
+        );
+      }
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → LicenseService.js → loadFileDetails()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
   static async loadSoftwareData() {
     let response;
 
