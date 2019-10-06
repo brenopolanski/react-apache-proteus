@@ -13,9 +13,28 @@
  *   the License.
  */
 
-// Views
-import Audit from './Audit';
-import NoMatchFound from './NoMatchFound';
-import Summary from './Summary';
+// Packages
+import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { Button, Result } from 'antd';
 
-export { Audit, NoMatchFound, Summary };
+const NoMatchFound = ({ history }) => {
+  return (
+    <Result
+      status="404"
+      title="404"
+      subTitle="Sorry, the page you visited does not exist."
+      extra={
+        <Button
+          type="primary"
+          icon="arrow-left"
+          onClick={() => history.goBack()}
+        >
+          Go Back
+        </Button>
+      }
+    />
+  );
+};
+
+export default withRouter(NoMatchFound);

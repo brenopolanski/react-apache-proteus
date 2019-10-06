@@ -41,7 +41,7 @@ class ProjectsTable extends Component {
     docs: [],
     selectedItem: {},
     searchText: '',
-    isShowProjectDetails: false,
+    showProjectDetails: false,
     loading: true,
     error: false,
     errorMsg: 'Error fetching data'
@@ -56,7 +56,7 @@ class ProjectsTable extends Component {
     return (
       !isEqual(this.state.docs, nextState.docs) ||
       this.state.searchText !== nextState.searchText ||
-      this.state.isShowProjectDetails !== nextState.isShowProjectDetails ||
+      this.state.showProjectDetails !== nextState.showProjectDetails ||
       this.state.loading !== nextState.loading ||
       this.state.error !== nextState.error
     );
@@ -183,7 +183,7 @@ class ProjectsTable extends Component {
   handleShowProjectDetails = item => {
     this.setState(prevState => ({
       selectedItem: item.repo ? item : {},
-      isShowProjectDetails: !prevState.isShowProjectDetails
+      showProjectDetails: !prevState.showProjectDetails
     }));
   };
 
@@ -256,7 +256,7 @@ class ProjectsTable extends Component {
   }
 
   render() {
-    const { selectedItem, isShowProjectDetails, loading, error } = this.state;
+    const { selectedItem, showProjectDetails, loading, error } = this.state;
 
     return (
       <Fragment>
@@ -273,9 +273,9 @@ class ProjectsTable extends Component {
           )}
         </Content>
 
-        {isShowProjectDetails && (
+        {showProjectDetails && (
           <ProjectDetails
-            visible={isShowProjectDetails}
+            visible={showProjectDetails}
             item={selectedItem}
             onClose={this.handleShowProjectDetails}
           />

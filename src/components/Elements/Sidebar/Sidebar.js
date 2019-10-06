@@ -39,8 +39,10 @@ class Sidebar extends PureComponent {
 
     if (location.pathname === '/') {
       this.setState({ selectedMenuItem: 'summaryMenu' });
-    } else {
+    } else if (location.pathname === '/audit') {
       this.setState({ selectedMenuItem: 'auditMenu' });
+    } else {
+      this.setState({ selectedMenuItem: '' });
     }
   }
 
@@ -51,8 +53,10 @@ class Sidebar extends PureComponent {
 
     if (key === 'summaryMenu') {
       history.push('/');
-    } else {
+    } else if (key === 'auditMenu') {
       history.push('/audit');
+    } else {
+      history.push('/');
     }
   };
 

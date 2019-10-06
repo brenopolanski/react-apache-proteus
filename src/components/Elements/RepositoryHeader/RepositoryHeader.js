@@ -14,8 +14,11 @@
  */
 
 // Packages
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Input, Layout } from 'antd';
+
+// Root
+import RepositoryFormModal from './RepositoryFormModal';
 
 // Styles
 import './RepositoryHeader.css';
@@ -24,15 +27,37 @@ import './RepositoryHeader.css';
 const { Header } = Layout;
 const { Search } = Input;
 
-class RepositoryHeader extends Component {
+class RepositoryHeader extends PureComponent {
+  state = {
+    repositoryUrl: '',
+    showRepositoryFormModal: false
+  };
+
+  handleShowRepositoryFormModal = value => {
+    this.setState(prevState => ({
+      repositoryUrl: typeof value === 'string' ? value : '',
+      showRepositoryFormModal: !prevState.showRepositoryFormModal
+    }));
+  };
+
   render() {
+    const { repositoryUrl, showRepositoryFormModal } = this.state;
+
     return (
       <Header className="proteus-repository-header">
         <Search
           placeholder="Repository to add to DRAT"
           enterButton="RUN"
           size="large"
+          onSearch={this.handleShowRepositoryFormModal}
         />
+
+        {showRepositoryFormModal && (
+          <RepositoryFormModal
+            url={repositoryUrl}
+            onCancel={this.handleShowRepositoryFormModal}
+          />
+        )}
       </Header>
     );
   }

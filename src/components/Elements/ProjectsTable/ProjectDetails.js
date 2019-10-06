@@ -45,7 +45,6 @@ class ProjectDetails extends Component {
   _isMounted = false;
 
   state = {
-    licenseDocs: {},
     fileDocs: [],
     searchText: '',
     loading: true,
@@ -60,7 +59,6 @@ class ProjectDetails extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return (
-      !isEqual(this.state.licenseDocs, nextState.licenseDocs) ||
       !isEqual(this.state.fileDocs, nextState.fileDocs) ||
       this.state.searchText !== nextState.searchText ||
       this.state.loading !== nextState.loading ||
@@ -134,17 +132,17 @@ class ProjectDetails extends Component {
         />
         <Button
           type="primary"
-          onClick={() => this.handleSearch(selectedKeys, confirm)}
           icon="search"
           size="small"
           style={{ width: 90, marginRight: 8 }}
+          onClick={() => this.handleSearch(selectedKeys, confirm)}
         >
           Search
         </Button>
         <Button
-          onClick={() => this.handleReset(clearFilters)}
           size="small"
           style={{ width: 90 }}
+          onClick={() => this.handleReset(clearFilters)}
         >
           Reset
         </Button>
@@ -198,8 +196,8 @@ class ProjectDetails extends Component {
         subTitle="Try again:"
         extra={
           <Button
-            icon="sync"
             type="danger"
+            icon="sync"
             onClick={this.callApiLoadFileDetails}
           >
             Refresh

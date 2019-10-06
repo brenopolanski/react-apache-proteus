@@ -23,6 +23,9 @@ import { routes } from './routes';
 // Layout
 import Container from './components/Layout/Container';
 
+// Views
+// import { NoMatchFound } from './views';
+
 // Styles
 import 'antd/dist/antd.css';
 import './styles/app.css';
@@ -66,6 +69,7 @@ class App extends Component {
                 exact={route.exact}
               />
             ))}
+            {/*<Route component={NoMatchFound} />*/}
           </Container>
         </Switch>
       </Router>
