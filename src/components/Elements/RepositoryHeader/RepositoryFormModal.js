@@ -24,7 +24,7 @@ const { Option } = Select;
 const CreateRepositoryFormModal = Form.create({ name: 'repositoryFormModal' })(
   class extends Component {
     render() {
-      const { form, visible, url, onCancel, onCreate } = this.props;
+      const { form, visible, repo, onCancel, onCreate } = this.props;
       const { getFieldDecorator } = form;
 
       return (
@@ -38,12 +38,12 @@ const CreateRepositoryFormModal = Form.create({ name: 'repositoryFormModal' })(
         >
           <Form layout="vertical">
             <Item label="Repository to add to DRAT">
-              {getFieldDecorator('url', {
-                initialValue: url,
+              {getFieldDecorator('repo', {
+                initialValue: repo,
                 rules: [
                   {
                     required: true,
-                    message: 'Repository URL field is required'
+                    message: 'Field is required'
                   }
                 ]
               })(<Input allowClear />)}
@@ -92,12 +92,12 @@ class RepositoryFormModal extends Component {
   };
 
   render() {
-    const { url, onCancel } = this.props;
+    const { repo, onCancel } = this.props;
 
     return (
       <CreateRepositoryFormModal
         wrappedComponentRef={this.saveFormRef}
-        url={url}
+        repo={repo}
         visible={true}
         onCancel={onCancel}
         onCreate={this.handleCreate}

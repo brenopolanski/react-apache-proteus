@@ -14,10 +14,13 @@
  */
 
 // Packages
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Layout } from 'antd';
+
+// Context API
+import { AppConsumer } from '../../../AppContext';
 
 // Elements
 import { Footer, RepositoryHeader, Sidebar } from '../../Elements';
@@ -35,24 +38,33 @@ class Container extends PureComponent {
   };
 
   render() {
+    const { children } = this.props;
     const { sidebarCollapsed } = this.state;
 
     return (
       <Layout className="proteus-container">
-        <Sidebar
-          collapsed={sidebarCollapsed}
-          onCollapse={this.handleSidebarCollapse}
-        />
-        <Layout
-          className={classNames('proteus-container-sidebar', {
-            'proteus-collapsed': sidebarCollapsed,
-            'proteus-no-collapsed': !sidebarCollapsed
-          })}
-        >
-          <RepositoryHeader />
-          {this.props.children}
-          <Footer />
-        </Layout>
+        <AppConsumer>
+          {({ view, setView }) => (
+            <Fragment>
+              <Sidebar
+                selectedView={view}
+                collapsed={sidebarCollapsed}
+                onChangeView={setView}
+                onCollapse={this.handleSidebarCollapse}
+              />
+              <Layout
+                className={classNames('proteus-container-sidebar', {
+                  'proteus-collapsed': sidebarCollapsed,
+                  'proteus-no-collapsed': !sidebarCollapsed
+                })}
+              >
+                <RepositoryHeader />
+                {children}
+                <Footer />
+              </Layout>
+            </Fragment>
+          )}
+        </AppConsumer>
       </Layout>
     );
   }

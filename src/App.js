@@ -1,30 +1,29 @@
 /*
- *   Licensed to the Apache Software Foundation (ASF) under one or more contributor
- *   license agreements.  See the NOTICE.txt file distributed with this work for
- *   additional information regarding copyright ownership.  The ASF licenses this
- *   file to you under the Apache License, Version 2.0 (the "License"); you may not
- *   use this file except in compliance with the License.  You may obtain a copy of
- *   the License at
- *        http://www.apache.org/licenses/LICENSE-2.0
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- *   License for the specific language governing permissions and limitations under
- *   the License.
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor
+ * license agreements.  See the NOTICE.txt file distributed with this work for
+ * additional information regarding copyright ownership.  The ASF licenses this
+ * file to you under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy of
+ * the License at
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 // Packages
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-// Routes
-import { routes } from './routes';
+// Context API
+import { AppConsumer, AppProvider } from './AppContext';
 
 // Layout
 import Container from './components/Layout/Container';
 
 // Views
-// import { NoMatchFound } from './views';
+import { Audit, Summary } from './views';
 
 // Styles
 import 'antd/dist/antd.css';
@@ -34,6 +33,10 @@ class App extends Component {
   constructor() {
     super();
 
+    this.state = {
+      view: 'summary'
+    };
+
     this.$el = document.getElementById('proteus-app-loading');
 
     this.showSplashScreen();
@@ -42,6 +45,10 @@ class App extends Component {
   componentDidMount() {
     this.hideSplashScreen();
   }
+
+  setView = view => {
+    this.setState({ view });
+  };
 
   showSplashScreen() {
     this.$el.removeAttribute('hidden');
@@ -57,22 +64,22 @@ class App extends Component {
   }
 
   render() {
+    const { setView } = this;
+    const contextValue = {
+      ...this.state,
+      setView
+    };
+
     return (
-      <Router>
-        <Switch>
-          <Container>
-            {routes.map((route, index) => (
-              <Route
-                key={index}
-                path={route.path}
-                component={route.component}
-                exact={route.exact}
-              />
-            ))}
-            {/*<Route component={NoMatchFound} />*/}
-          </Container>
-        </Switch>
-      </Router>
+      <AppProvider value={contextValue}>
+        <AppConsumer>
+          {({ view }) => (
+            <Container>
+              {view === 'summary' ? <Summary /> : <Audit />}
+            </Container>
+          )}
+        </AppConsumer>
+      </AppProvider>
     );
   }
 }

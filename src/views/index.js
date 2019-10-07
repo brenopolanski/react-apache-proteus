@@ -15,7 +15,6 @@
 
 // Views
 import Audit from './Audit';
-import NoMatchFound from './NoMatchFound';
 import Summary from './Summary';
 
-export { Audit, NoMatchFound, Summary };
+export { Audit, Summary };

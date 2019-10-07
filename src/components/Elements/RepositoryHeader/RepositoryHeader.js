@@ -54,7 +54,7 @@ class RepositoryHeader extends PureComponent {
 
         {showRepositoryFormModal && (
           <RepositoryFormModal
-            url={repositoryUrl}
+            repo={repositoryUrl}
             onCancel={this.handleShowRepositoryFormModal}
           />
         )}

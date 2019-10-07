@@ -16,7 +16,6 @@
 // Packages
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { Icon, Layout, Menu } from 'antd';
 
 // UI
@@ -35,11 +34,11 @@ class Sidebar extends PureComponent {
   };
 
   componentWillMount() {
-    const { location } = this.props;
+    const { selectedView } = this.props;
 
-    if (location.pathname === '/') {
+    if (selectedView === 'summary') {
       this.setState({ selectedMenuItem: 'summaryMenu' });
-    } else if (location.pathname === '/audit') {
+    } else if (selectedView === 'audit') {
       this.setState({ selectedMenuItem: 'auditMenu' });
     } else {
       this.setState({ selectedMenuItem: '' });
@@ -47,16 +46,16 @@ class Sidebar extends PureComponent {
   }
 
   handleClickMenu = ({ item, key }) => {
-    const { history } = this.props;
+    const { onChangeView } = this.props;
 
     this.setState({ selectedMenuItem: key });
 
     if (key === 'summaryMenu') {
-      history.push('/');
+      onChangeView('summary');
     } else if (key === 'auditMenu') {
-      history.push('/audit');
+      onChangeView('audit');
     } else {
-      history.push('/');
+      onChangeView('summary');
     }
   };
 
@@ -97,12 +96,15 @@ class Sidebar extends PureComponent {
 }
 
 Sidebar.propTypes = {
+  selectedView: PropTypes.string,
   collapsed: PropTypes.bool,
+  onChangeView: PropTypes.func,
   onCollapse: PropTypes.func
 };
 
 Sidebar.defaultProps = {
+  selectedView: 'summary',
   collapsed: true
 };
 
-export default withRouter(Sidebar);
+export default Sidebar;
