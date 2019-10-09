@@ -12,3 +12,49 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
+// Packages
+import axios from 'axios';
+
+// Utils
+import Helpers from '../utils/Helpers';
+
+class RepositoryService {
+  static async resetAction() {
+    const url = '/proteus/drat/reset';
+    let response;
+
+    try {
+      response = axios.post(url, '');
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → RepositoryService.js → resetAction()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
+  static async setAction(action, data) {
+    const url = `/proteus/drat/${action}`;
+    let response;
+
+    try {
+      response = axios.post(url, data);
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → RepositoryService.js → setAction()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+}
+
+export default RepositoryService;

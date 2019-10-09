@@ -14,8 +14,17 @@
  */
 
 // Packages
-import React, { Component } from 'react';
-import { Form, Modal, Input, Select } from 'antd';
+import React, { Component, PureComponent } from 'react';
+import { Form, Modal, Input, Select, Spin } from 'antd';
+
+// Services
+import { RepositoryService } from '../../../services';
+
+// UI
+import { ErrorMessage } from '../../UI';
+
+// Utils
+import Helpers from '../../../utils/Helpers';
 
 // Components
 const { Item } = Form;
@@ -24,7 +33,7 @@ const { Option } = Select;
 const CreateRepositoryFormModal = Form.create({ name: 'repositoryFormModal' })(
   class extends Component {
     render() {
-      const { form, visible, repo, onCancel, onCreate } = this.props;
+      const { form, visible, repo, loading, onCancel, onCreate } = this.props;
       const { getFieldDecorator } = form;
 
       return (
@@ -37,35 +46,37 @@ const CreateRepositoryFormModal = Form.create({ name: 'repositoryFormModal' })(
           centered
         >
           <Form layout="vertical">
-            <Item label="Repository to add to DRAT">
-              {getFieldDecorator('repo', {
-                initialValue: repo,
-                rules: [
-                  {
-                    required: true,
-                    message: 'Field is required'
-                  }
-                ]
-              })(<Input allowClear />)}
-            </Item>
-            <Item label="Name of the repository">
-              {getFieldDecorator('name')(<Input allowClear />)}
-            </Item>
-            <Item label="Description about the repository">
-              {getFieldDecorator('description')(<Input allowClear />)}
-            </Item>
-            <Item label="Action">
-              {getFieldDecorator('action', { initialValue: 'Go' })(
-                <Select>
-                  <Option value="go">Go</Option>
-                  <Option value="crawl">Crawl</Option>
-                  <Option value="index">Index</Option>
-                  <Option value="map">Map</Option>
-                  <Option value="reduce">Reduce</Option>
-                  <Option value="reset">Reset</Option>
-                </Select>
-              )}
-            </Item>
+            <Spin spinning={loading}>
+              <Item label="Repository to add to DRAT">
+                {getFieldDecorator('repo', {
+                  initialValue: repo,
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Field is required'
+                    }
+                  ]
+                })(<Input allowClear />)}
+              </Item>
+              <Item label="Name of the repository">
+                {getFieldDecorator('name')(<Input allowClear />)}
+              </Item>
+              <Item label="Description about the repository">
+                {getFieldDecorator('description')(<Input allowClear />)}
+              </Item>
+              <Item label="Action">
+                {getFieldDecorator('action', { initialValue: 'Go' })(
+                  <Select>
+                    <Option value="go">Go</Option>
+                    <Option value="crawl">Crawl</Option>
+                    <Option value="index">Index</Option>
+                    <Option value="map">Map</Option>
+                    <Option value="reduce">Reduce</Option>
+                    <Option value="reset">Reset</Option>
+                  </Select>
+                )}
+              </Item>
+            </Spin>
           </Form>
         </Modal>
       );
@@ -73,7 +84,81 @@ const CreateRepositoryFormModal = Form.create({ name: 'repositoryFormModal' })(
   }
 );
 
-class RepositoryFormModal extends Component {
+class RepositoryFormModal extends PureComponent {
+  _isMounted = false;
+
+  state = {
+    loading: false,
+    error: false,
+    errorMsg: 'Error fetching data'
+  };
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  callApiResetAction = () => {
+    this.setState({
+      loading: true,
+      error: false
+    });
+
+    RepositoryService.resetAction()
+      .then(res => {
+        if (this._isMounted && res.status === 200) {
+          this.setState({ loading: false });
+        } else {
+          if (this._isMounted) {
+            this.setState({
+              loading: false,
+              error: true
+            });
+          }
+        }
+      })
+      .catch(error => {
+        if (this._isMounted) {
+          this.setState({
+            loading: false,
+            error: true
+          });
+        }
+      });
+  };
+
+  callApiSetAction = () => {
+    this.setState({
+      loading: true,
+      error: false
+    });
+
+    RepositoryService.setAction()
+      .then(res => {
+        if (this._isMounted && res.status === 200) {
+          console.log(res);
+        } else {
+          if (this._isMounted) {
+            this.setState({
+              loading: false,
+              error: true
+            });
+          }
+        }
+      })
+      .catch(error => {
+        if (this._isMounted) {
+          this.setState({
+            loading: false,
+            error: true
+          });
+        }
+      });
+  };
+
   saveFormRef = formRef => {
     this.formRef = formRef;
   };
@@ -86,19 +171,37 @@ class RepositoryFormModal extends Component {
         return;
       }
 
-      console.log('Received values of form: ', values);
-      // form.resetFields();
+      const { repo, name, description, action } = values;
+      const data = {
+        id: Helpers.uid(''),
+        repo,
+        name,
+        description,
+        loc_url: ''
+      };
+
+      if (action === 'reset') {
+        console.log('callApiResetAction()');
+
+        this.callApiResetAction();
+      } else {
+        console.log('callApiSetAction()');
+      }
+
+      form.resetFields();
     });
   };
 
   render() {
     const { repo, onCancel } = this.props;
+    const { loading } = this.state;
 
     return (
       <CreateRepositoryFormModal
         wrappedComponentRef={this.saveFormRef}
         repo={repo}
         visible={true}
+        loading={loading}
         onCancel={onCancel}
         onCreate={this.handleCreate}
       />

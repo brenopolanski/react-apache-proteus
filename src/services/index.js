@@ -15,5 +15,6 @@
 
 // Services
 import LicenseService from './LicenseService';
+import RepositoryService from './RepositoryService';
 
-export { LicenseService };
+export { LicenseService, RepositoryService };
