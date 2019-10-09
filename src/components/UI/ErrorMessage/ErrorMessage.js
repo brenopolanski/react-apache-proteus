@@ -13,11 +13,29 @@
  * the License.
  */
 
-// UI
-import ErrorMessage from './ErrorMessage';
-import Loading from './Loading';
-import Logo from './Logo';
-import TableRowSkeleton from './TableRowSkeleton';
-import TitleBar from './TitleBar';
+// Packages
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Button, Result } from 'antd';
 
-export { ErrorMessage, Loading, Logo, TableRowSkeleton, TitleBar };
+const ErrorMessage = ({ text, callApi }) => {
+  return (
+    <Result
+      status="error"
+      title={text}
+      subTitle="Try again:"
+      extra={
+        <Button icon="sync" type="danger" onClick={callApi}>
+          Refresh
+        </Button>
+      }
+    />
+  );
+};
+
+ErrorMessage.propTypes = {
+  text: PropTypes.string,
+  callApi: PropTypes.func
+};
+
+export default ErrorMessage;

@@ -13,11 +13,4 @@
  * the License.
  */
 
-// UI
-import ErrorMessage from './ErrorMessage';
-import Loading from './Loading';
-import Logo from './Logo';
-import TableRowSkeleton from './TableRowSkeleton';
-import TitleBar from './TitleBar';
-
-export { ErrorMessage, Loading, Logo, TableRowSkeleton, TitleBar };
+export { default } from './ErrorMessage';

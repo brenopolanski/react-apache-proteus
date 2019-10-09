@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'react-fast-compare';
-import { Button, Descriptions, Drawer, Icon, Input, Result, Table } from 'antd';
+import { Button, Descriptions, Drawer, Icon, Input, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 
 // Services
@@ -27,7 +27,7 @@ import { LicenseService } from '../../../services';
 import Content from '../../Layout/Content';
 
 // UI
-import { TableRowSkeleton, TitleBar } from '../../UI';
+import { ErrorMessage, TableRowSkeleton, TitleBar } from '../../UI';
 
 // Utils
 import Helpers from '../../../utils/Helpers';
@@ -186,27 +186,6 @@ class ProjectDetails extends Component {
     this.setState({ searchText: '' });
   };
 
-  renderError() {
-    const { errorMsg } = this.state;
-
-    return (
-      <Result
-        status="error"
-        title={errorMsg}
-        subTitle="Try again:"
-        extra={
-          <Button
-            type="danger"
-            icon="sync"
-            onClick={this.callApiLoadFileDetails}
-          >
-            Refresh
-          </Button>
-        }
-      />
-    );
-  }
-
   renderLicenseDetails() {
     const { item } = this.props;
     const { name, description, repo, loc_url } = item;
@@ -233,7 +212,7 @@ class ProjectDetails extends Component {
   }
 
   renderFileDetails() {
-    const { fileDocs, loading, error } = this.state;
+    const { fileDocs, loading, error, errorMsg } = this.state;
     const columns = [
       {
         title: 'Location',
@@ -313,7 +292,10 @@ class ProjectDetails extends Component {
               dataSource={fileDocs}
             />
           ) : (
-            this.renderErrorFileDocs()
+            <ErrorMessage
+              text={errorMsg}
+              callApi={this.callApiLoadFileDetails}
+            />
           )
         ) : (
           <TableRowSkeleton />

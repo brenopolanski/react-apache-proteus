@@ -16,7 +16,7 @@
 // Packages
 import React, { Component, Fragment } from 'react';
 import isEqual from 'react-fast-compare';
-import { Button, Icon, Input, Result, Table } from 'antd';
+import { Button, Icon, Input, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 
 // Services
@@ -26,7 +26,7 @@ import { LicenseService } from '../../../services';
 import Content from '../../Layout/Content';
 
 // UI
-import { TableRowSkeleton, TitleBar } from '../../UI';
+import { ErrorMessage, TableRowSkeleton, TitleBar } from '../../UI';
 
 // Root
 import ProjectDetails from './ProjectDetails';
@@ -187,27 +187,6 @@ class ProjectsTable extends Component {
     }));
   };
 
-  renderError() {
-    const { errorMsg } = this.state;
-
-    return (
-      <Result
-        status="error"
-        title={errorMsg}
-        subTitle="Try again:"
-        extra={
-          <Button
-            icon="sync"
-            type="danger"
-            onClick={this.callApiLoadProjectData}
-          >
-            Refresh
-          </Button>
-        }
-      />
-    );
-  }
-
   renderTable() {
     const { docs } = this.state;
     const columns = [
@@ -256,7 +235,13 @@ class ProjectsTable extends Component {
   }
 
   render() {
-    const { selectedItem, showProjectDetails, loading, error } = this.state;
+    const {
+      selectedItem,
+      showProjectDetails,
+      loading,
+      error,
+      errorMsg
+    } = this.state;
 
     return (
       <Fragment>
@@ -266,7 +251,10 @@ class ProjectsTable extends Component {
             !error ? (
               this.renderTable()
             ) : (
-              this.renderError()
+              <ErrorMessage
+                text={errorMsg}
+                callApi={this.callApiLoadProjectData}
+              />
             )
           ) : (
             <TableRowSkeleton />

@@ -16,7 +16,7 @@
 // Packages
 import React, { Component, Fragment } from 'react';
 import isEqual from 'react-fast-compare';
-import { Button, Empty, Input, Result } from 'antd';
+import { Button, Empty, Input } from 'antd';
 import * as d3 from 'd3';
 import tinycolor from 'tinycolor2';
 
@@ -27,7 +27,7 @@ import { LicenseService } from '../../../services';
 import Content from '../../Layout/Content';
 
 // UI
-import { Loading, TitleBar } from '../../UI';
+import { ErrorMessage, Loading, TitleBar } from '../../UI';
 
 // Styles
 import './TopMimeTypesChart.css';
@@ -261,27 +261,6 @@ class TopMimeTypesChart extends Component {
     }
   };
 
-  renderError() {
-    const { errorMsg } = this.state;
-
-    return (
-      <Result
-        status="error"
-        title={errorMsg}
-        subTitle="Try again:"
-        extra={
-          <Button
-            icon="sync"
-            type="danger"
-            onClick={this.callApiLoadSoftwareData}
-          >
-            Refresh
-          </Button>
-        }
-      />
-    );
-  }
-
   renderChart() {
     const { count } = this.state;
 
@@ -320,7 +299,7 @@ class TopMimeTypesChart extends Component {
   }
 
   render() {
-    const { loading, error } = this.state;
+    const { loading, error, errorMsg } = this.state;
     const contentStyle = !loading && !error ? { height: 682 } : undefined;
 
     return (
@@ -330,7 +309,10 @@ class TopMimeTypesChart extends Component {
           !error ? (
             this.renderChart()
           ) : (
-            this.renderError()
+            <ErrorMessage
+              text={errorMsg}
+              callApi={this.callApiLoadSoftwareData}
+            />
           )
         ) : (
           <Loading style={{ height: 336 }} />

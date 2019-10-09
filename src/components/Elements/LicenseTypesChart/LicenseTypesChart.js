@@ -16,7 +16,6 @@
 // Packages
 import React, { Component } from 'react';
 import isEqual from 'react-fast-compare';
-import { Button, Result } from 'antd';
 import * as d3 from 'd3';
 import tinycolor from 'tinycolor2';
 
@@ -27,7 +26,7 @@ import { LicenseService } from '../../../services';
 import Content from '../../Layout/Content';
 
 // UI
-import { Loading, TitleBar } from '../../UI';
+import { ErrorMessage, Loading, TitleBar } from '../../UI';
 
 // Styles
 import './LicenseTypesChart.css';
@@ -212,27 +211,6 @@ class LicenseTypesChart extends Component {
       .text(({ data }) => data.key);
   };
 
-  renderError() {
-    const { errorMsg } = this.state;
-
-    return (
-      <Result
-        status="error"
-        title={errorMsg}
-        subTitle="Try again:"
-        extra={
-          <Button
-            icon="sync"
-            type="danger"
-            onClick={this.callApiLoadLicenseTypesData}
-          >
-            Refresh
-          </Button>
-        }
-      />
-    );
-  }
-
   renderChart() {
     return (
       <div
@@ -243,7 +221,7 @@ class LicenseTypesChart extends Component {
   }
 
   render() {
-    const { loading, error } = this.state;
+    const { loading, error, errorMsg } = this.state;
 
     return (
       <Content>
@@ -252,7 +230,10 @@ class LicenseTypesChart extends Component {
           !error ? (
             this.renderChart()
           ) : (
-            this.renderError()
+            <ErrorMessage
+              text={errorMsg}
+              callApi={this.callApiLoadLicenseTypesData}
+            />
           )
         ) : (
           <Loading style={{ height: 336 }} />

@@ -16,7 +16,6 @@
 // Packages
 import React, { Component } from 'react';
 import isEqual from 'react-fast-compare';
-import { Button, Result } from 'antd';
 import * as d3 from 'd3';
 
 // Services
@@ -26,7 +25,7 @@ import { LicenseService } from '../../../services';
 import Content from '../../Layout/Content';
 
 // UI
-import { Loading, TitleBar } from '../../UI';
+import { ErrorMessage, Loading, TitleBar } from '../../UI';
 
 class AuditSummary extends Component {
   _isMounted = false;
@@ -339,27 +338,6 @@ class AuditSummary extends Component {
       .text(({ label }) => label);
   };
 
-  renderError() {
-    const { errorMsg } = this.state;
-
-    return (
-      <Result
-        status="error"
-        title={errorMsg}
-        subTitle="Try again:"
-        extra={
-          <Button
-            icon="sync"
-            type="danger"
-            onClick={this.callApiLoadSoftwareLicenseData}
-          >
-            Refresh
-          </Button>
-        }
-      />
-    );
-  }
-
   renderChart() {
     return (
       <div
@@ -370,7 +348,7 @@ class AuditSummary extends Component {
   }
 
   render() {
-    const { loading, error } = this.state;
+    const { loading, error, errorMsg } = this.state;
 
     return (
       <Content>
@@ -379,7 +357,10 @@ class AuditSummary extends Component {
           !error ? (
             this.renderChart()
           ) : (
-            this.renderError()
+            <ErrorMessage
+              text={errorMsg}
+              callApi={this.callApiLoadSoftwareLicenseData}
+            />
           )
         ) : (
           <Loading style={{ height: 336 }} />
