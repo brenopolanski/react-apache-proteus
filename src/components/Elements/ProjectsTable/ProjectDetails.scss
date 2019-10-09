@@ -35,6 +35,10 @@
       .ant-drawer-body {
         overflow-y: auto !important;
         height: 100% !important;
+
+        .ant-descriptions-view {
+          border-radius: 0 !important;
+        }
       }
     }
   }
