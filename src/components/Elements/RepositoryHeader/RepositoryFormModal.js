@@ -20,9 +20,6 @@ import { Form, Modal, Input, Select, Spin } from 'antd';
 // Services
 import { RepositoryService } from '../../../services';
 
-// UI
-import { ErrorMessage } from '../../UI';
-
 // Utils
 import Helpers from '../../../utils/Helpers';
 
@@ -33,7 +30,7 @@ const { Option } = Select;
 const CreateRepositoryFormModal = Form.create({ name: 'repositoryFormModal' })(
   class extends Component {
     render() {
-      const { form, visible, repo, loading, onCancel, onCreate } = this.props;
+      const { form, visible, repo, loading, onCreate, onCancel } = this.props;
       const { getFieldDecorator } = form;
 
       return (
@@ -41,8 +38,8 @@ const CreateRepositoryFormModal = Form.create({ name: 'repositoryFormModal' })(
           title="Repository Form"
           visible={visible}
           okText="Run"
-          onCancel={onCancel}
           onOk={onCreate}
+          onCancel={onCancel}
           centered
         >
           <Form layout="vertical">
@@ -89,8 +86,7 @@ class RepositoryFormModal extends PureComponent {
 
   state = {
     loading: false,
-    error: false,
-    errorMsg: 'Error fetching data'
+    error: false
   };
 
   componentDidMount() {
@@ -130,16 +126,25 @@ class RepositoryFormModal extends PureComponent {
       });
   };
 
-  callApiSetAction = () => {
+  callApiSetAction = values => {
+    const { repo, name, description, action } = values;
+    const data = {
+      id: Helpers.uid(''),
+      repo,
+      name,
+      description,
+      loc_url: ''
+    };
+
     this.setState({
       loading: true,
       error: false
     });
 
-    RepositoryService.setAction()
+    RepositoryService.setAction(action, data)
       .then(res => {
         if (this._isMounted && res.status === 200) {
-          console.log(res);
+          this.setState({ loading: false });
         } else {
           if (this._isMounted) {
             this.setState({
@@ -171,21 +176,12 @@ class RepositoryFormModal extends PureComponent {
         return;
       }
 
-      const { repo, name, description, action } = values;
-      const data = {
-        id: Helpers.uid(''),
-        repo,
-        name,
-        description,
-        loc_url: ''
-      };
+      const { action } = values;
 
       if (action === 'reset') {
-        console.log('callApiResetAction()');
-
         this.callApiResetAction();
       } else {
-        console.log('callApiSetAction()');
+        this.callApiSetAction(values);
       }
 
       form.resetFields();
@@ -202,8 +198,8 @@ class RepositoryFormModal extends PureComponent {
         repo={repo}
         visible={true}
         loading={loading}
-        onCancel={onCancel}
         onCreate={this.handleCreate}
+        onCancel={onCancel}
       />
     );
   }
