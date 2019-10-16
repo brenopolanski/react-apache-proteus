@@ -14,7 +14,7 @@ First of all, install the dependencies to run this app.
 $ yarn install (or npm i)
 
 # Run the app
-$ yarn start (or npm run start)
+$ yarn start (or npm start)
 
 # The app runs on http://localhost:3000
 ```
