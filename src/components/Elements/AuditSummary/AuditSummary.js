@@ -277,7 +277,7 @@ class AuditSummary extends Component {
       })
       .attr('y', barHeight / 2 + 1.5)
       .attr('style', (d, i) => `fill:${color(i % data.series.length)}`)
-      .attr('style', 'font-size:.55em')
+      .attr('style', 'font-size: 0.55em')
       .text((d, i) => `${d} ${mylabels[i % data.series.length]}`);
 
     // Draw labels
@@ -294,7 +294,7 @@ class AuditSummary extends Component {
         return x;
       })
       .attr('y', -20)
-      .attr('dy', '.35em')
+      .attr('dy', '0.35em')
       .attr('transform', 'rotate(-90)')
       .text((d, i) => {
         if (i % data.series.length === 0) {
