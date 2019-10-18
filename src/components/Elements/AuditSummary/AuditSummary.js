@@ -16,6 +16,8 @@
 // Packages
 import React, { Component } from 'react';
 import isEqual from 'react-fast-compare';
+import { isEmpty } from 'lodash';
+import { Empty } from 'antd';
 import * as d3 from 'd3';
 
 // Services
@@ -67,7 +69,10 @@ class AuditSummary extends Component {
           const { docs } = data.response;
 
           this.setState({ docs, loading: false });
-          this.drawChart(docs);
+
+          if (!isEmpty(docs)) {
+            this.drawChart(docs);
+          }
         } else {
           if (this._isMounted) {
             this.setState({
@@ -348,14 +353,18 @@ class AuditSummary extends Component {
   }
 
   render() {
-    const { loading, error, errorMsg } = this.state;
+    const { docs, loading, error, errorMsg } = this.state;
 
     return (
       <Content>
         <TitleBar title="Audit Summary" />
         {!loading ? (
           !error ? (
-            this.renderChart()
+            !isEmpty(docs) ? (
+              this.renderChart()
+            ) : (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            )
           ) : (
             <ErrorMessage
               text={errorMsg}

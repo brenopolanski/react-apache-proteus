@@ -16,6 +16,7 @@
 // Packages
 import React, { Component, Fragment } from 'react';
 import isEqual from 'react-fast-compare';
+import { isEmpty } from 'lodash';
 import { Button, Empty, Input } from 'antd';
 import * as d3 from 'd3';
 import tinycolor from 'tinycolor2';
@@ -86,7 +87,10 @@ class TopMimeTypesChart extends Component {
           const { docs } = data.response;
 
           this.setState({ docs, loading: false });
-          this.drawChart(docs, count);
+
+          if (!isEmpty(docs)) {
+            this.drawChart(docs, count);
+          }
         } else {
           if (this._isMounted) {
             this.setState({
@@ -299,15 +303,20 @@ class TopMimeTypesChart extends Component {
   }
 
   render() {
-    const { loading, error, errorMsg } = this.state;
-    const contentStyle = !loading && !error ? { height: 682 } : undefined;
+    const { docs, loading, error, errorMsg } = this.state;
+    const contentStyle =
+      !loading && !error && !isEmpty(docs) ? { height: 682 } : undefined;
 
     return (
       <Content style={contentStyle}>
         <TitleBar title="Top MIME Types" />
         {!loading ? (
           !error ? (
-            this.renderChart()
+            !isEmpty(docs) ? (
+              this.renderChart()
+            ) : (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            )
           ) : (
             <ErrorMessage
               text={errorMsg}

@@ -16,6 +16,8 @@
 // Packages
 import React, { Component } from 'react';
 import isEqual from 'react-fast-compare';
+import { isEmpty } from 'lodash';
+import { Empty } from 'antd';
 import * as d3 from 'd3';
 import tinycolor from 'tinycolor2';
 
@@ -71,7 +73,10 @@ class AllMimeTypesChart extends Component {
           const { docs } = data.response;
 
           this.setState({ docs, loading: false });
-          this.drawChart(docs);
+
+          if (!isEmpty(docs)) {
+            this.drawChart(docs);
+          }
         } else {
           if (this._isMounted) {
             this.setState({
@@ -216,14 +221,18 @@ class AllMimeTypesChart extends Component {
   }
 
   render() {
-    const { loading, error, errorMsg } = this.state;
+    const { docs, loading, error, errorMsg } = this.state;
 
     return (
       <Content>
         <TitleBar title="All MIME Types" />
         {!loading ? (
           !error ? (
-            this.renderChart()
+            !isEmpty(docs) ? (
+              this.renderChart()
+            ) : (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            )
           ) : (
             <ErrorMessage
               text={errorMsg}
