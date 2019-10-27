@@ -13,17 +13,6 @@
  * the License.
  */
 
-// Packages
-const proxy = require('http-proxy-middleware');
-
-// Utils
-import { BASE_URL } from './utils/constants';
-
-// Configs
-const target = BASE_URL;
-const changeOrigin = true;
-
-module.exports = app => {
-  app.use('/proteus', proxy({ target, changeOrigin }));
-  app.use('/solr', proxy({ target, changeOrigin }));
-};
+// Constants
+export const BASE_URL = 'http://localhost:8080'; // or http://drat-vm.apache.org:8080
+export const SPLASH_SCREEN_TIME = 3000;
