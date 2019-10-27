@@ -13,6 +13,14 @@
  * the License.
  */
 
-// Constants
-export const BASE_URL = 'http://localhost:8080'; // or http://drat-vm.apache.org:8080
-export const SPLASH_SCREEN_TIME = 3000;
+// Packages
+import React from 'react';
+
+// Elements
+import { AuditSummary } from '../components/Elements';
+
+const Audit = () => {
+  return <AuditSummary />;
+};
+
+export default Audit;

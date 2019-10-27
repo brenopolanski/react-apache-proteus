@@ -16,11 +16,8 @@
 // Packages
 const proxy = require('http-proxy-middleware');
 
-// Utils
-import { BASE_URL } from './utils/constants';
-
 // Configs
-const target = BASE_URL;
+const target = 'http://localhost:8080'; // or http://drat-vm.apache.org:8080
 const changeOrigin = true;
 
 module.exports = app => {

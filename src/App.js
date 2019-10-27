@@ -25,16 +25,16 @@ import Container from './components/Layout/Container';
 // Views
 import { Audit, Summary } from './views';
 
-// Utils
-import { SPLASH_SCREEN_TIME } from './utils/constants';
-
 // Styles
 import 'antd/dist/antd.css';
 import './styles/app.css';
 
+// Constants
+const SPLASH_SCREEN_TIME = 3000;
+
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       view: 'summary'
