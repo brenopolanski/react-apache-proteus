@@ -53,7 +53,7 @@ const CreateRepositoryFormModal = Form.create({ name: 'repositoryFormModal' })(
                       message: 'Field is required'
                     }
                   ]
-                })(<Input allowClear />)}
+                })(<Input autoFocus allowClear />)}
               </Item>
               <Item label="Name of the repository">
                 {getFieldDecorator('name')(<Input allowClear />)}
@@ -62,7 +62,7 @@ const CreateRepositoryFormModal = Form.create({ name: 'repositoryFormModal' })(
                 {getFieldDecorator('description')(<Input allowClear />)}
               </Item>
               <Item label="Action">
-                {getFieldDecorator('action', { initialValue: 'Go' })(
+                {getFieldDecorator('action', { initialValue: 'go' })(
                   <Select>
                     <Option value="go">Go</Option>
                     <Option value="crawl">Crawl</Option>
@@ -141,7 +141,7 @@ class RepositoryFormModal extends PureComponent {
       error: false
     });
 
-    RepositoryService.setAction(action, data)
+    RepositoryService.analyze(action, data)
       .then(res => {
         if (this._isMounted && res.status === 200) {
           this.setState({ loading: false });

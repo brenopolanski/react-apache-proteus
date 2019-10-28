@@ -38,7 +38,7 @@ class RepositoryService {
     return response;
   }
 
-  static async setAction(action, data) {
+  static async analyze(action, data) {
     const url = `/proteus/drat/${action}`;
     let response;
 
@@ -46,7 +46,7 @@ class RepositoryService {
       response = axios.post(url, data);
     } catch (error) {
       Helpers.axiosHandleErrors(
-        'services → RepositoryService.js → setAction()',
+        'services → RepositoryService.js → analyze()',
         error
       );
 
