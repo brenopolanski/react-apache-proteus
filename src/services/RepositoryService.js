@@ -87,6 +87,131 @@ class RepositoryService {
 
     return { repo, response };
   }
+
+  static async loadStatusProgress() {
+    let response;
+
+    try {
+      response = await axios.get('/proteus/service/status/drat');
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → RepositoryService.js → loadStatusProgress()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
+  static async loadLicenseBreakdown() {
+    let response;
+
+    try {
+      response = await axios.get('/proteus/service/repo/breakdown/license');
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → RepositoryService.js → loadLicenseBreakdown()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
+  static async loadMimeTypeBreakdown() {
+    let response;
+
+    try {
+      response = await axios.get(
+        '/proteus/service/repo/breakdown/mime?limit=5'
+      );
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → RepositoryService.js → loadMimeTypeBreakdown()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
+  static async loadSizeData(currentRepo) {
+    let response;
+
+    try {
+      response = await axios.get(
+        `/proteus/service/repo/size?dir=${currentRepo}`
+      );
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → RepositoryService.js → loadSizeData()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
+  static async loadInstanceCount() {
+    let response;
+
+    try {
+      response = await axios.get('/proteus/service/status/oodt/raw');
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → RepositoryService.js → loadInstanceCount()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
+  static async loadCrawledFiles() {
+    let response;
+
+    try {
+      response = await axios.get('/proteus/filemanager/progress');
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → RepositoryService.js → loadCrawledFiles()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
+
+  static async loadIndexedFiles() {
+    let response;
+
+    try {
+      response = await axios.get(
+        '/solr/drat/select?q=producttype:GenericFile&fl=numFound&wt=json&indent=true'
+      );
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → RepositoryService.js → loadIndexedFiles()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return response;
+  }
 }
 
 export default RepositoryService;

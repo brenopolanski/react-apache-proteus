@@ -88,14 +88,14 @@ const CreateRepositoryFormModal = Form.create({ name: 'repositoryFormModal' })(
 );
 
 class RepositoryFormModal extends PureComponent {
-  static contextType = AppContext;
-
   _isMounted = false;
 
   state = {
     loading: false,
     error: false
   };
+
+  static contextType = AppContext;
 
   componentDidMount() {
     this._isMounted = true;

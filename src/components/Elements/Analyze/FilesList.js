@@ -32,8 +32,6 @@ import { TitleBar } from '../../UI';
 const INTERVAL = 1000;
 
 class FilesList extends Component {
-  static contextType = AppContext;
-
   _isMounted = false;
 
   state = {
@@ -43,6 +41,8 @@ class FilesList extends Component {
     errorMsg: 'Error fetching data'
   };
 
+  static contextType = AppContext;
+
   componentWillMount() {
     const { currentRepo } = this.context;
 
@@ -51,6 +51,7 @@ class FilesList extends Component {
 
   componentDidMount() {
     this._isMounted = true;
+    this.callApiLoadData();
   }
 
   componentWillUnmount() {
