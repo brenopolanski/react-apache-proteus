@@ -114,6 +114,7 @@ class RepositoryFormModal extends PureComponent {
     RepositoryService.resetAction()
       .then(res => {
         if (this._isMounted && res.status === 200) {
+          console.log(res);
           this.setState({ loading: false });
         } else {
           if (this._isMounted) {

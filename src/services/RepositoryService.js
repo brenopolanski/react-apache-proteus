@@ -15,6 +15,7 @@
 
 // Packages
 import axios from 'axios';
+import { isEmpty } from 'lodash';
 
 // Utils
 import Helpers from '../utils/Helpers';
@@ -28,7 +29,7 @@ class RepositoryService {
     let response;
 
     try {
-      response = axios.post(url, '');
+      response = await axios.post(url, '');
     } catch (error) {
       Helpers.axiosHandleErrors(
         'services → RepositoryService.js → resetAction()',
@@ -46,7 +47,7 @@ class RepositoryService {
     let response;
 
     try {
-      response = axios.post(url, data);
+      response = await axios.post(url, data);
     } catch (error) {
       Helpers.axiosHandleErrors(
         'services → RepositoryService.js → analyze()',
@@ -57,6 +58,34 @@ class RepositoryService {
     }
 
     return response;
+  }
+
+  static async loadCurrentRepo(currentRepo) {
+    let repo = '';
+    let response;
+
+    try {
+      if (currentRepo.indexOf('http') !== -1) {
+        response = await axios.get(`${REST_URL}/currentrepo`);
+
+        const { data } = response;
+
+        repo = data;
+      }
+
+      if (!isEmpty(currentRepo)) {
+        response = await axios.get('/proteus/service/products?topn=10');
+      }
+    } catch (error) {
+      Helpers.axiosHandleErrors(
+        'services → RepositoryService.js → loadCurrentRepo()',
+        error
+      );
+
+      return error.response;
+    }
+
+    return { repo, response };
   }
 }
 
