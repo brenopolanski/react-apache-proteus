@@ -13,9 +13,23 @@
  * the License.
  */
 
-// Views
-import Analyze from './Analyze';
-import Audit from './Audit';
-import Summary from './Summary';
+// Packages
+import React, { Component } from 'react';
 
-export { Analyze, Audit, Summary };
+// Layout
+import Content from '../../Layout/Content';
+
+// UI
+import { TitleBar } from '../../UI';
+
+class FilesList extends Component {
+  render() {
+    return (
+      <Content>
+        <TitleBar title="Files List" />
+      </Content>
+    );
+  }
+}
+
+export default FilesList;

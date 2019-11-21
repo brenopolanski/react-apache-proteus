@@ -23,7 +23,7 @@ import { AppConsumer, AppProvider } from './AppContext';
 import Container from './components/Layout/Container';
 
 // Views
-import { Audit, Summary } from './views';
+import { Analyze, Audit, Summary } from './views';
 
 // Styles
 import 'antd/dist/antd.css';
@@ -37,7 +37,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      view: 'summary'
+      view: 'summary',
+      currentActionRequest: null
     };
 
     this.$el = document.getElementById('proteus-app-loading');
@@ -51,6 +52,10 @@ class App extends Component {
 
   setView = view => {
     this.setState({ view });
+  };
+
+  setCurrentActionRequest = action => {
+    this.setState({ currentActionRequest: action });
   };
 
   showSplashScreen() {
@@ -67,10 +72,11 @@ class App extends Component {
   }
 
   render() {
-    const { setView } = this;
+    const { setView, setCurrentActionRequest } = this;
     const contextValue = {
       ...this.state,
-      setView
+      setView,
+      setCurrentActionRequest
     };
 
     return (
@@ -78,7 +84,13 @@ class App extends Component {
         <AppConsumer>
           {({ view }) => (
             <Container>
-              {view === 'summary' ? <Summary /> : <Audit />}
+              {view === 'summary' ? (
+                <Summary />
+              ) : view === 'audit' ? (
+                <Audit />
+              ) : (
+                <Analyze />
+              )}
             </Container>
           )}
         </AppConsumer>

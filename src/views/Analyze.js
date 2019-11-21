@@ -13,9 +13,19 @@
  * the License.
  */
 
-// Views
-import Analyze from './Analyze';
-import Audit from './Audit';
-import Summary from './Summary';
+// Packages
+import React, { Fragment } from 'react';
+import { Row, Col } from 'antd';
 
-export { Analyze, Audit, Summary };
+// Elements
+import { FilesList } from '../components/Elements/Analyze';
+
+const Analyze = () => {
+  return (
+    <Fragment>
+      <FilesList />
+    </Fragment>
+  );
+};
+
+export default Analyze;

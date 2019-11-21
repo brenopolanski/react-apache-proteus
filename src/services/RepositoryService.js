@@ -19,9 +19,12 @@ import axios from 'axios';
 // Utils
 import Helpers from '../utils/Helpers';
 
+// Constants
+const REST_URL = '/proteus/drat';
+
 class RepositoryService {
   static async resetAction() {
-    const url = '/proteus/drat/reset';
+    const url = `${REST_URL}/reset`;
     let response;
 
     try {
@@ -39,7 +42,7 @@ class RepositoryService {
   }
 
   static async analyze(action, data) {
-    const url = `/proteus/drat/${action}`;
+    const url = `${REST_URL}/${action}`;
     let response;
 
     try {

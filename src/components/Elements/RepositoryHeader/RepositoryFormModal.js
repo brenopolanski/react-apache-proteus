@@ -15,10 +15,13 @@
 
 // Packages
 import React, { Component, PureComponent } from 'react';
-import { Form, Modal, Input, Select, Spin } from 'antd';
+import { Form, Modal, Icon, Input, Select, Spin } from 'antd';
 
 // Services
 import { RepositoryService } from '../../../services';
+
+// Context API
+import AppContext from '../../../AppContext';
 
 // Utils
 import Helpers from '../../../utils/Helpers';
@@ -43,7 +46,10 @@ const CreateRepositoryFormModal = Form.create({ name: 'repositoryFormModal' })(
           centered
         >
           <Form layout="vertical">
-            <Spin spinning={loading}>
+            <Spin
+              indicator={<Icon type="loading" style={{ fontSize: 30 }} spin />}
+              spinning={loading}
+            >
               <Item label="Repository to add to DRAT">
                 {getFieldDecorator('repo', {
                   initialValue: repo,
@@ -82,6 +88,8 @@ const CreateRepositoryFormModal = Form.create({ name: 'repositoryFormModal' })(
 );
 
 class RepositoryFormModal extends PureComponent {
+  static contextType = AppContext;
+
   _isMounted = false;
 
   state = {
@@ -127,6 +135,8 @@ class RepositoryFormModal extends PureComponent {
   };
 
   callApiSetAction = values => {
+    const { setView, setCurrentActionRequest } = this.context;
+    const { onCancel } = this.props;
     const { repo, name, description, action } = values;
     const data = {
       id: Helpers.uid(''),
@@ -145,6 +155,10 @@ class RepositoryFormModal extends PureComponent {
       .then(res => {
         if (this._isMounted && res.status === 200) {
           this.setState({ loading: false });
+
+          setView('analyze');
+          setCurrentActionRequest(action);
+          onCancel();
         } else {
           if (this._isMounted) {
             this.setState({

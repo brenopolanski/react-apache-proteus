@@ -13,9 +13,7 @@
  * the License.
  */
 
-// Views
-import Analyze from './Analyze';
-import Audit from './Audit';
-import Summary from './Summary';
+// Elements
+import FilesList from './FilesList';
 
-export { Analyze, Audit, Summary };
+export { FilesList };
