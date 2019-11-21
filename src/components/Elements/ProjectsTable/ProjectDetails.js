@@ -284,21 +284,12 @@ class ProjectDetails extends Component {
     return (
       <Content>
         <TitleBar title="File Details" />
-        {!loading ? (
-          !error ? (
-            <Table
-              scroll={{ y: 200 }}
-              columns={columns}
-              dataSource={fileDocs}
-            />
-          ) : (
-            <ErrorMessage
-              text={errorMsg}
-              callApi={this.callApiLoadFileDetails}
-            />
-          )
-        ) : (
+        {loading ? (
           <TableRowSkeleton />
+        ) : error ? (
+          <ErrorMessage text={errorMsg} callApi={this.callApiLoadFileDetails} />
+        ) : (
+          <Table scroll={{ y: 200 }} columns={columns} dataSource={fileDocs} />
         )}
       </Content>
     );

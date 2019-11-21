@@ -310,21 +310,17 @@ class TopMimeTypesChart extends Component {
     return (
       <Content style={contentStyle}>
         <TitleBar title="Top MIME Types" />
-        {!loading ? (
-          !error ? (
-            !isEmpty(docs) ? (
-              this.renderChart()
-            ) : (
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            )
-          ) : (
-            <ErrorMessage
-              text={errorMsg}
-              callApi={this.callApiLoadSoftwareData}
-            />
-          )
-        ) : (
+        {loading ? (
           <Loading style={{ height: 336 }} />
+        ) : error ? (
+          <ErrorMessage
+            text={errorMsg}
+            callApi={this.callApiLoadSoftwareData}
+          />
+        ) : !isEmpty(docs) ? (
+          this.renderChart()
+        ) : (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
       </Content>
     );

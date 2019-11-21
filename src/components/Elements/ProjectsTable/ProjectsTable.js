@@ -247,17 +247,15 @@ class ProjectsTable extends Component {
       <Fragment>
         <Content>
           <TitleBar title="Projects" />
-          {!loading ? (
-            !error ? (
-              this.renderTable()
-            ) : (
-              <ErrorMessage
-                text={errorMsg}
-                callApi={this.callApiLoadProjectData}
-              />
-            )
-          ) : (
+          {loading ? (
             <TableRowSkeleton />
+          ) : error ? (
+            <ErrorMessage
+              text={errorMsg}
+              callApi={this.callApiLoadProjectData}
+            />
+          ) : (
+            this.renderTable()
           )}
         </Content>
 

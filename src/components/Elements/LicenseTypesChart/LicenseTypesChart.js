@@ -231,21 +231,17 @@ class LicenseTypesChart extends Component {
     return (
       <Content>
         <TitleBar title="License Types" />
-        {!loading ? (
-          !error ? (
-            !isEmpty(docs) ? (
-              this.renderChart()
-            ) : (
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            )
-          ) : (
-            <ErrorMessage
-              text={errorMsg}
-              callApi={this.callApiLoadLicenseTypesData}
-            />
-          )
-        ) : (
+        {loading ? (
           <Loading style={{ height: 336 }} />
+        ) : error ? (
+          <ErrorMessage
+            text={errorMsg}
+            callApi={this.callApiLoadLicenseTypesData}
+          />
+        ) : !isEmpty(docs) ? (
+          this.renderChart()
+        ) : (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
       </Content>
     );
