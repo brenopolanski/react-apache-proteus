@@ -38,7 +38,9 @@ class App extends Component {
 
     this.state = {
       view: 'summary',
-      currentActionRequest: null
+      currentRepo: null,
+      currentActionRequest: null,
+      progress: false
     };
 
     this.$el = document.getElementById('proteus-app-loading');
@@ -49,14 +51,6 @@ class App extends Component {
   componentDidMount() {
     this.hideSplashScreen();
   }
-
-  setView = view => {
-    this.setState({ view });
-  };
-
-  setCurrentActionRequest = action => {
-    this.setState({ currentActionRequest: action });
-  };
 
   showSplashScreen() {
     this.$el.removeAttribute('hidden');
@@ -71,12 +65,35 @@ class App extends Component {
     }
   }
 
+  setView = view => {
+    this.setState({ view });
+  };
+
+  setCurrentRepo = repo => {
+    this.setState({ currentRepo: repo });
+  };
+
+  setCurrentActionRequest = action => {
+    this.setState({ currentActionRequest: action });
+  };
+
+  setProgress = progress => {
+    this.setState({ progress });
+  };
+
   render() {
-    const { setView, setCurrentActionRequest } = this;
+    const {
+      setView,
+      setCurrentRepo,
+      setCurrentActionRequest,
+      setProgress
+    } = this;
     const contextValue = {
       ...this.state,
       setView,
-      setCurrentActionRequest
+      setCurrentRepo,
+      setCurrentActionRequest,
+      setProgress
     };
 
     return (

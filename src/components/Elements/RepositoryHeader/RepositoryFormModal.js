@@ -135,7 +135,12 @@ class RepositoryFormModal extends PureComponent {
   };
 
   callApiSetAction = values => {
-    const { setView, setCurrentActionRequest } = this.context;
+    const {
+      setView,
+      setCurrentRepo,
+      setCurrentActionRequest,
+      setProgress
+    } = this.context;
     const { onCancel } = this.props;
     const { repo, name, description, action } = values;
     const data = {
@@ -157,7 +162,9 @@ class RepositoryFormModal extends PureComponent {
           this.setState({ loading: false });
 
           setView('analyze');
+          setCurrentRepo(repo);
           setCurrentActionRequest(action);
+          setProgress(true);
           onCancel();
         } else {
           if (this._isMounted) {
